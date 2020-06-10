@@ -1,26 +1,26 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using MicShop.Core.Entities;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using MicShop.Models;
+using System.Text;
 
-namespace MicShop.Data
+namespace MicShop.Core.Data
 {
     public class MicShopContext : DbContext
     {
-        public MicShopContext (DbContextOptions<MicShopContext> options)
+        public MicShopContext(DbContextOptions<MicShopContext> options)
             : base(options)
         {
         }
 
-        public DbSet<MicShop.Models.CategoryModel> Category{ get; set; }
+        public DbSet<CategoryModel> Category { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CategoryModel>()
                 .HasMany(c => c.Products)
                 .WithOne(e => e.Category);
         }
-        public DbSet<MicShop.Models.ProductModel> Product { get; set; }
+        public DbSet<ProductModel> Product { get; set; }
     }
+
 }

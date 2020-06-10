@@ -6,25 +6,26 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MicShop.Data;
+using MicShop.Core.Entities;
 using MicShop.Models;
+using MicShop.Services.Interfaces;
 
 namespace MicShop.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly MicShopContext _context;
+        private readonly ICategoryService _categoryService;
         //private readonly 
 
-        public CategoryController(MicShopContext context)
+        public CategoryController(ICategoryService categoryService)
         {
-            _context = context;
+            _categoryService = categoryService;
         }
 
         // GET: Category
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Category.ToListAsync());
+            return View(await _categoryService.GetAll());
         }
 
         // GET: Category/Details/5
@@ -35,8 +36,7 @@ namespace MicShop.Controllers
                 return NotFound();
             }
 
-            var categoryModel = await _context.Category
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var categoryModel = await _categoryService.Get(id);
             if (categoryModel == null)
             {
                 return NotFound();
@@ -60,12 +60,9 @@ namespace MicShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                MemoryStream ms = new MemoryStream(); 
-                await categoryModel.Image.CopyToAsync(ms);
-                string base64Image = Convert.ToBase64String(ms.ToArray());
-                categoryModel.ImageBase64 = base64Image;
-                _context.Add(categoryModel);
-                await _context.SaveChangesAsync();
+               
+                categoryModel.ImageBase64 = await SetImageIntoModel(categoryModel);
+                await _categoryService.Create(categoryModel);
                 return RedirectToAction(nameof(Index));
             }
             return View(categoryModel);
@@ -79,7 +76,7 @@ namespace MicShop.Controllers
                 return NotFound();
             }
 
-            var categoryModel = await _context.Category.FindAsync(id);
+            var categoryModel = await _categoryService.Get(id);
             if (categoryModel == null)
             {
                 return NotFound();
@@ -103,27 +100,18 @@ namespace MicShop.Controllers
             {
                 try
                 {
-                    MemoryStream ms = new MemoryStream();
                     if (categoryModel.Image != null)
                     {
-                        await categoryModel.Image.CopyToAsync(ms);
-                        string base64Image = Convert.ToBase64String(ms.ToArray());
-                        categoryModel.ImageBase64 = base64Image;
+                        
+                        categoryModel.ImageBase64 = await SetImageIntoModel(categoryModel);
                     }
-                   
-                    _context.Update(categoryModel);
-                    await _context.SaveChangesAsync();
+
+                   await _categoryService.Edit(id, categoryModel);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception ex)
                 {
-                    if (!CategoryModelExists(categoryModel.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //log exeption
+                    return NotFound();
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -138,8 +126,8 @@ namespace MicShop.Controllers
                 return NotFound();
             }
 
-            var categoryModel = await _context.Category
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var categoryModel = await _categoryService.Get(id);
+                
             if (categoryModel == null)
             {
                 return NotFound();
@@ -153,15 +141,19 @@ namespace MicShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var categoryModel = await _context.Category.FindAsync(id);
-            _context.Category.Remove(categoryModel);
-            await _context.SaveChangesAsync();
+            await _categoryService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CategoryModelExists(int id)
+
+        private async Task<string> SetImageIntoModel(CategoryModel categoryModel)
         {
-            return _context.Category.Any(e => e.ID == id);
+            MemoryStream ms = new MemoryStream();
+            await categoryModel.Image.CopyToAsync(ms);
+            string base64Image = Convert.ToBase64String(ms.ToArray());
+            ms.Close();
+            return base64Image;
+
         }
     }
 }

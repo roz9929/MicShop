@@ -8,7 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using MicShop.Data;
+using MicShop.Core.Data;
+using MicShop.Services.Enjections;
 
 namespace MicShop
 {
@@ -28,6 +29,7 @@ namespace MicShop
 
             services.AddDbContext<MicShopContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("MicShopContext")));
+            services.AddServicesDependencyInjections();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

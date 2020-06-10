@@ -20,4 +20,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MicShop.Core\MicShop.Core.csproj" />
+    <ProjectReference Include="..\MicShop.Services\MicShop.Services.csproj" />
+  </ItemGroup>
+
 </Project>
