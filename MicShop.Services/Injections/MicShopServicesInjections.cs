@@ -12,6 +12,7 @@ namespace MicShop.Services.Enjections
         public static void AddServicesDependencyInjections(this IServiceCollection services)
         {
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IProductService, ProductService>();
         }
     }
 }

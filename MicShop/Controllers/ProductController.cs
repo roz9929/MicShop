@@ -1,175 +1,180 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.IO;
-//using System.Linq;
-//using System.Threading.Tasks;
-//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.AspNetCore.Mvc.Rendering;
-//using Microsoft.EntityFrameworkCore;
-//using MicShop.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using MicShop.Core.Entities;
+using MicShop.Models;
+using MicShop.Services.Interfaces;
 
-//namespace MicShop.Controllers
-//{
-//    public class ProductController : Controller
-//    {
-//        private readonly MicShopContext _context;
+namespace MicShop.Controllers
+{
+    public class ProductController : Controller
+    {
+        private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
+        public ProductController(IProductService productService, ICategoryService categoryService)
+        {
+            _productService = productService;
+            _categoryService = categoryService;
+        }
 
-//        public ProductController(MicShopContext context)
-//        {
-//            _context = context;
-//        }
+        // GET: Product
+        public async Task<IActionResult> Index()
+        {
 
-//        // GET: Product
-//        public async Task<IActionResult> Index()
-//        {
+            return View(await _productService.GetAll() );
+        }
+
+        // GET: Product/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var productModel = await _productService.Get(id);
+            if (productModel == null)
+            {
+                return NotFound();
+            }
+
+            return View(productModel);
+        }
+
+        // GET: Product/Create
+       async public Task<IActionResult> Create()
+        {
+            var categories =await _categoryService.GetAll();
+            ViewBag.Categories = new SelectList(categories, "ID", "Name");
+            return View();
+        }
+
+        // POST: Product/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ProductModel productModel)
+        {
+            if (ModelState.IsValid)
+            {
+
+                var cat = await _categoryService.Get(productModel.Category.ID);
+                productModel.Category = cat;
+                string base64Image = await SetImageIntoModel(productModel);
+                productModel.ImageBase64 = base64Image;
+                productModel = await _productService.Create(productModel);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(productModel);
+        }
+
+        // GET: Product/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var categories = await _categoryService.GetAll();
+            ViewBag.Categories = new SelectList(categories, "ID", "Name");
+
+            var productModel = await _productService.Get(id);
+            if (productModel == null)
+            {
+                return NotFound();
+            }
+            return View(productModel);
+        }
+
+        // POST: Product/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, ProductModel productModel)
+        {
+            if (id != productModel.ID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var cat = await _categoryService.Get(id);
+                    productModel.Category = cat;
+                    
+                    if (productModel.Image != null)
+                    {
+
+                        string base64Image = await SetImageIntoModel(productModel);
+                        productModel.ImageBase64 = base64Image;
+                    }
+                    productModel = await _productService.Edit(id, productModel);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProductModelExists(productModel.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(productModel);
+        }
+
+        // GET: Product/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var productModel = await _productService.Get(id);
+            if (productModel == null)
+            {
+                return NotFound();
+            }
+
+            return View(productModel);
+        }
+
+        // POST: Product/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            await _productService.Delet(id);
             
-//            return View(await _context.Product.Include(category => category.Category).ToListAsync());
-//        }
+            return RedirectToAction(nameof(Index));
+        }
 
-//        // GET: Product/Details/5
-//        public async Task<IActionResult> Details(int? id)
-//        {
-//            if (id == null)
-//            {
-//                return NotFound();
-//            }
+        private bool ProductModelExists(int id)
+        {
+            return _productService.ProductModelExists(id);
+        }
+        private async Task<string> SetImageIntoModel(ProductModel productModel)
+        {
+            MemoryStream ms = new MemoryStream();
+            await productModel.Image.CopyToAsync(ms);
+            string base64Image = Convert.ToBase64String(ms.ToArray());
+            ms.Close();
+            return base64Image;
 
-//            var productModel = await _context.Product.Include(category => category.Category)
-//                .FirstOrDefaultAsync(m => m.ID == id);
-//            if (productModel == null)
-//            {
-//                return NotFound();
-//            }
-
-//            return View(productModel);
-//        }
-
-//        // GET: Product/Create
-//        public IActionResult Create()
-//        {
-//            var categories = _context.Category.ToList();
-//            ViewBag.Categories = new SelectList(categories, "ID", "Name");
-//            return View();
-//        }
-
-//        // POST: Product/Create
-//        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-//        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-//        [HttpPost]
-//        [ValidateAntiForgeryToken]
-//        public async Task<IActionResult> Create(ProductModel productModel)
-//        {
-//            if (ModelState.IsValid)
-//            {
-                
-//                var cat = await _context.Category.FirstOrDefaultAsync(m => m.ID == productModel.Category.ID);
-//                productModel.Category = cat;
-//                MemoryStream ms = new MemoryStream();
-//                await productModel.Image.CopyToAsync(ms);
-//                string base64Image = Convert.ToBase64String(ms.ToArray());
-//                productModel.ImageBase64 = base64Image;
-//                _context.Add(productModel);
-//                await _context.SaveChangesAsync();
-//                return RedirectToAction(nameof(Index));
-//            }
-//            return View(productModel);
-//        }
-
-//        // GET: Product/Edit/5
-//        public async Task<IActionResult> Edit(int? id)
-//        {
-//            if (id == null)
-//            {
-//                return NotFound();
-//            }
-
-//            var categories = _context.Category.ToList();
-//            ViewBag.Categories = new SelectList(categories, "ID", "Name");
-
-//            var productModel = await _context.Product.FindAsync(id);
-//            if (productModel == null)
-//            {
-//                return NotFound();
-//            }
-//            return View(productModel);
-//        }
-
-//        // POST: Product/Edit/5
-//        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-//        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-//        [HttpPost]
-//        [ValidateAntiForgeryToken]
-//        public async Task<IActionResult> Edit(int id, ProductModel productModel)
-//        {
-//            if (id != productModel.ID)
-//            {
-//                return NotFound();
-//            }
-
-//            if (ModelState.IsValid)
-//            {
-//                try
-//                {
-//                    var cat = await _context.Category.FirstOrDefaultAsync(m => m.ID == productModel.Category.ID);
-//                    productModel.Category = cat;
-//                    MemoryStream ms = new MemoryStream();
-//                    if (productModel.Image != null)
-//                    {
-//                        await productModel.Image.CopyToAsync(ms);
-//                        string base64Image = Convert.ToBase64String(ms.ToArray());
-//                        productModel.ImageBase64 = base64Image;
-//                    }
-//                    _context.Update(productModel);
-//                    await _context.SaveChangesAsync();
-//                }
-//                catch (DbUpdateConcurrencyException)
-//                {
-//                    if (!ProductModelExists(productModel.ID))
-//                    {
-//                        return NotFound();
-//                    }
-//                    else
-//                    {
-//                        throw;
-//                    }
-//                }
-//                return RedirectToAction(nameof(Index));
-//            }
-//            return View(productModel);
-//        }
-
-//        // GET: Product/Delete/5
-//        public async Task<IActionResult> Delete(int? id)
-//        {
-//            if (id == null)
-//            {
-//                return NotFound();
-//            }
-
-//            var productModel = await _context.Product
-//                .FirstOrDefaultAsync(m => m.ID == id);
-//            if (productModel == null)
-//            {
-//                return NotFound();
-//            }
-
-//            return View(productModel);
-//        }
-
-//        // POST: Product/Delete/5
-//        [HttpPost, ActionName("Delete")]
-//        [ValidateAntiForgeryToken]
-//        public async Task<IActionResult> DeleteConfirmed(int id)
-//        {
-//            var productModel = await _context.Product.FindAsync(id);
-//            _context.Product.Remove(productModel);
-//            await _context.SaveChangesAsync();
-//            return RedirectToAction(nameof(Index));
-//        }
-
-//        private bool ProductModelExists(int id)
-//        {
-//            return _context.Product.Any(e => e.ID == id);
-//        }
-//    }
-//}
+        }
+    }
+}
