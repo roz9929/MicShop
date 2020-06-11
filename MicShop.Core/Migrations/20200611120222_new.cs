@@ -1,11 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace MicShop.Migrations
+namespace MicShop.Core.Migrations
 {
-    public partial class my_migration1 : Migration
+    public partial class @new : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Category",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    ImageBase64 = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Category", x => x.ID);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Product",
                 columns: table => new
@@ -16,7 +30,8 @@ namespace MicShop.Migrations
                     Price = table.Column<double>(nullable: false),
                     OldPrice = table.Column<double>(nullable: false),
                     Sku = table.Column<string>(nullable: true),
-                    CategoryID = table.Column<int>(nullable: true)
+                    CategoryID = table.Column<int>(nullable: true),
+                    ImageBase64 = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -39,6 +54,9 @@ namespace MicShop.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Product");
+
+            migrationBuilder.DropTable(
+                name: "Category");
         }
     }
 }

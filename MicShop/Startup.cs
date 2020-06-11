@@ -28,7 +28,7 @@ namespace MicShop
             services.AddControllersWithViews();
 
             services.AddDbContext<MicShopContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("MicShopContext")));
+                    options.UseSqlServer(Configuration.GetConnectionString("MicShopContext"), b => b.MigrationsAssembly("MicShop.Core")));
             services.AddServicesDependencyInjections();
         }
 
