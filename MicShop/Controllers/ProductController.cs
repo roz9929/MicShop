@@ -61,6 +61,10 @@ namespace MicShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductModel productModel)
         {
+            if (productModel.Image == null)
+            {
+                ModelState.AddModelError("Image", "Please Select Image");
+            }
             if (ModelState.IsValid)
             {
 
@@ -98,7 +102,7 @@ namespace MicShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ProductModel productModel)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Price,OldPrice,Sku,Image,Category")] ProductModel productModel)
         {
             if (id != productModel.ID)
             {
@@ -109,7 +113,7 @@ namespace MicShop.Controllers
             {
                 try
                 {
-                    var cat = await _categoryService.Get(id);
+                    var cat = await _categoryService.Get(productModel.Category.ID);
                     productModel.Category = cat;
                     
                     if (productModel.Image != null)

@@ -35,7 +35,17 @@ namespace MicShop.Services.Implamentantions
 
         public async Task<ProductModel> Edit(int id, ProductModel productModel)
         {
-            _context.Update(productModel);
+            _context.Product.Attach(productModel);
+            _context.Entry(productModel).Property(x => x.Name).IsModified = true;
+            _context.Entry(productModel).Property(x => x.Price).IsModified = true;
+            _context.Entry(productModel).Property(x => x.OldPrice).IsModified = true;
+            _context.Entry(productModel).Property(x => x.Sku).IsModified = true;
+
+            if (productModel.ImageBase64 != null)
+            {
+                _context.Entry(productModel).Property(x => x.ImageBase64).IsModified = true;
+            }
+
             await _context.SaveChangesAsync();
             return productModel;
         }

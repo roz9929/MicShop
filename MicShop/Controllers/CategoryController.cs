@@ -58,6 +58,15 @@ namespace MicShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create( CategoryModel categoryModel)
         {
+            if(categoryModel.Image == null)
+            {
+                ModelState.AddModelError("Image", "Please Select Image");
+            }
+            if (categoryModel.Name == null)
+            {
+                ModelState.AddModelError("Name", "Please enter name");
+            }
+
             if (ModelState.IsValid)
             {
                
@@ -96,15 +105,22 @@ namespace MicShop.Controllers
                 return NotFound();
             }
 
+            if (categoryModel.Name == null)
+            {
+                ModelState.AddModelError("Name", "Please enter name");
+            }
+
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     if (categoryModel.Image != null)
                     {
-                        
                         categoryModel.ImageBase64 = await SetImageIntoModel(categoryModel);
                     }
+    
+
 
                    await _categoryService.Edit(id, categoryModel);
                 }

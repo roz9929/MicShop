@@ -41,7 +41,13 @@ namespace MicShop.Services.Implamentantions
         {
             try
             {
-                _context.Update(categoryModel);
+                _context.Category.Attach(categoryModel);
+                _context.Entry(categoryModel).Property(x => x.Name).IsModified = true;
+                if (categoryModel.ImageBase64 != null)
+                {
+                    _context.Entry(categoryModel).Property(x => x.ImageBase64).IsModified = true;
+                }
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException ex)
