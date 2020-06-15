@@ -1,0 +1,57 @@
+﻿@model IEnumerable<MicShop.Core.Entities.CategoryModel>
+
+@{
+    ViewData["Title"] = "Caregory";
+}
+
+    <div class="row">
+        <div class="panel panel-default widget"  style="width:100%">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Categories
+                </h3>
+            </div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    @foreach (var item in Model)
+                    {
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-2 col-md-1">
+                                    <img src="data:image/png;base64,@Html.DisplayFor(modelItem => item.ImageBase64)" class="img-circle img-responsive" alt="" />
+                                </div>
+                                <div class="col-xs-10 col-md-11">
+                                    <div>
+                                        <a href="#">
+                                            @Html.DisplayFor(modelItem => item.Name)
+
+                                        </a>
+
+                                    </div>
+
+                                    <div class="action">
+                                        <form>
+                                            <button type="submit" asp-action="Edit" asp-route-id="@item.ID" class="btn btn-primary btn-xs" title="Edit">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                            </button>
+                                            <button type="submit" asp-action="Details" asp-route-id="@item.ID" class="btn btn-success btn-xs" title="Details">
+                                                <span class="glyphicon glyphicon-info-sign"></span>
+                                            </button>
+                                            <button asp-action="Delete" asp-route-id="@item.ID" type="submit" class="btn btn-danger btn-xs" title="Delete">
+                                                
+                                                <span class="glyphicon glyphicon-trash"> </span>
+                                            </button>
+                                        </form>
+                                            </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+                <a asp-action="Create" class="btn btn-primary btn-sm btn-block" role="button"><span class="glyphicon glyphicon-plus"></span>Create New</a>
+            </div>
+        </div>
+    </div>
+
+
+

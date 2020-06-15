@@ -12,6 +12,7 @@ using MicShop.Services.Interfaces;
 
 namespace MicShop.Controllers
 {
+  
     public class ProductController : Controller
     {
         private readonly IProductService _productService;

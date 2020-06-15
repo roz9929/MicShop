@@ -59,7 +59,7 @@ namespace MicShop.Services.Implamentantions
                 }
 
             }
-           
+
 
             return categoryModel;
 
@@ -75,6 +75,13 @@ namespace MicShop.Services.Implamentantions
         public async Task<List<CategoryModel>> GetAll()
         {
             return await _context.Category.ToListAsync();
+        }
+
+        public async Task<List<ProductModel>> GetCategoryProducts(int? id)
+        {
+            var categoryModel = await _context.Category.Include(c => c.Products).FirstOrDefaultAsync(m => m.ID == id);
+            List<ProductModel> productList = categoryModel.Products.ToList();
+            return productList;
         }
     }
 }

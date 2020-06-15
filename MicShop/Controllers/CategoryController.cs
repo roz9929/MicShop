@@ -1,31 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MicShop.Core.Data;
 using MicShop.Core.Entities;
-using MicShop.Models;
 using MicShop.Services.Interfaces;
 
 namespace MicShop.Controllers
 {
     public class CategoryController : Controller
     {
+        private readonly MicShopContext _context;
         private readonly ICategoryService _categoryService;
-        //private readonly 
+        private readonly IProductService _productService;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(MicShopContext context, ICategoryService categoryService, IProductService productService)
         {
             _categoryService = categoryService;
+            _productService = productService;
         }
 
         // GET: Category
         public async Task<IActionResult> Index()
         {
-            return View(await _categoryService.GetAll());
+            var categories = await _categoryService.GetAll();
+            //var products = await _productService.GetAll();
+            ViewData["Categories"] = categories;
+            //ViewData["Products"] = products;
+            return View();
         }
 
         // GET: Category/Details/5
@@ -36,7 +41,8 @@ namespace MicShop.Controllers
                 return NotFound();
             }
 
-            var categoryModel = await _categoryService.Get(id);
+            var categoryModel = await _context.Category
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (categoryModel == null)
             {
                 return NotFound();
@@ -56,22 +62,12 @@ namespace MicShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( CategoryModel categoryModel)
+        public async Task<IActionResult> Create([Bind("ID,Name,ImageBase64")] CategoryModel categoryModel)
         {
-            if(categoryModel.Image == null)
-            {
-                ModelState.AddModelError("Image", "Please Select Image");
-            }
-            if (categoryModel.Name == null)
-            {
-                ModelState.AddModelError("Name", "Please enter name");
-            }
-
             if (ModelState.IsValid)
             {
-               
-                categoryModel.ImageBase64 = await SetImageIntoModel(categoryModel);
-                await _categoryService.Create(categoryModel);
+                _context.Add(categoryModel);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(categoryModel);
@@ -85,7 +81,7 @@ namespace MicShop.Controllers
                 return NotFound();
             }
 
-            var categoryModel = await _categoryService.Get(id);
+            var categoryModel = await _context.Category.FindAsync(id);
             if (categoryModel == null)
             {
                 return NotFound();
@@ -98,36 +94,30 @@ namespace MicShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CategoryModel categoryModel)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,ImageBase64")] CategoryModel categoryModel)
         {
             if (id != categoryModel.ID)
             {
                 return NotFound();
             }
 
-            if (categoryModel.Name == null)
-            {
-                ModelState.AddModelError("Name", "Please enter name");
-            }
-
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    if (categoryModel.Image != null)
-                    {
-                        categoryModel.ImageBase64 = await SetImageIntoModel(categoryModel);
-                    }
-    
-
-
-                   await _categoryService.Edit(id, categoryModel);
+                    _context.Update(categoryModel);
+                    await _context.SaveChangesAsync();
                 }
-                catch (Exception ex)
+                catch (DbUpdateConcurrencyException)
                 {
-                    //log exeption
-                    return NotFound();
+                    if (!CategoryModelExists(categoryModel.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -142,8 +132,8 @@ namespace MicShop.Controllers
                 return NotFound();
             }
 
-            var categoryModel = await _categoryService.Get(id);
-                
+            var categoryModel = await _context.Category
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (categoryModel == null)
             {
                 return NotFound();
@@ -151,25 +141,42 @@ namespace MicShop.Controllers
 
             return View(categoryModel);
         }
+        public async Task<IActionResult> GetCategoryProducts(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var categoryProducts = await _categoryService.GetCategoryProducts(id);
+            if (categoryProducts == null)
+            {
+                return NotFound();
+            }
+            var categories = await _categoryService.GetAll();
+            var lastProducts = await _productService.GetLastProducts(id);
+            //var products = await _productService.GetAll();
+            ViewData["Categories"] = categories;
+            ViewData["lastProducts"] = lastProducts;
+            //ViewData["Products"] = products;
+            return View("CategoryProducts", categoryProducts);
+        }
         // POST: Category/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _categoryService.Delete(id);
+            var categoryModel = await _context.Category.FindAsync(id);
+            _context.Category.Remove(categoryModel);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-
-        private async Task<string> SetImageIntoModel(CategoryModel categoryModel)
+        private bool CategoryModelExists(int id)
         {
-            MemoryStream ms = new MemoryStream();
-            await categoryModel.Image.CopyToAsync(ms);
-            string base64Image = Convert.ToBase64String(ms.ToArray());
-            ms.Close();
-            return base64Image;
-
+            return _context.Category.Any(e => e.ID == id);
         }
+
+        
     }
 }

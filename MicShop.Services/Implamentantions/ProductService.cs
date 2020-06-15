@@ -14,12 +14,16 @@ namespace MicShop.Services.Implamentantions
     internal class ProductService : IProductService
     {
         private readonly MicShopContext _context;
-        public ProductService(MicShopContext context)
+        private readonly ICategoryService _categoryService;
+
+        public ProductService(MicShopContext context, ICategoryService categoryService)
         {
             _context = context;
+            _categoryService = categoryService;
         }
         public async Task<ProductModel> Create(ProductModel productModel)
         {
+            productModel.Created = DateTime.Now;
             _context.Add(productModel);
             await _context.SaveChangesAsync();
             return productModel;
@@ -36,15 +40,15 @@ namespace MicShop.Services.Implamentantions
         public async Task<ProductModel> Edit(int id, ProductModel productModel)
         {
             _context.Product.Attach(productModel);
-            _context.Entry(productModel).Property(x => x.Name).IsModified = true;
-            _context.Entry(productModel).Property(x => x.Price).IsModified = true;
-            _context.Entry(productModel).Property(x => x.OldPrice).IsModified = true;
-            _context.Entry(productModel).Property(x => x.Sku).IsModified = true;
-
             if (productModel.ImageBase64 != null)
             {
                 _context.Entry(productModel).Property(x => x.ImageBase64).IsModified = true;
             }
+            else
+            {
+                _context.Entry(productModel).Property(x => x.ImageBase64).IsModified = false;
+            }
+         
 
             await _context.SaveChangesAsync();
             return productModel;
@@ -66,6 +70,25 @@ namespace MicShop.Services.Implamentantions
            return  _context.Product.Any(e => e.ID == id);
         }
 
+        public async Task<List<ProductModel>> GetProductsByCategory(int? id)
+        {
+            List<ProductModel> categoryProducts = new List<ProductModel>();
+            categoryProducts = await _categoryService.GetCategoryProducts(id);
+            return categoryProducts;
 
+        }
+
+        public async Task<List<ProductModel>> GetLastProducts(int? id)
+        {
+            List<ProductModel> categoryProducts = new List<ProductModel>();
+            categoryProducts = await _categoryService.GetCategoryProducts(id);
+            List<ProductModel> lastProducts = new List<ProductModel>();
+            lastProducts = categoryProducts.OrderBy(x => x.Created).ToList();
+            if (lastProducts.Count > 9)
+                lastProducts = lastProducts.GetRange(0, 9);
+
+            return lastProducts;
+
+        }
     }
 }

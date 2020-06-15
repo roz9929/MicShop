@@ -26,5 +26,6 @@ namespace MicShop.Core.Entities
         
         [NotMapped]
         public IFormFile Image { get; set; }
+        public DateTime Created { get; set; }
     }
 }

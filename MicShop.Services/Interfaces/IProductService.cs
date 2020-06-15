@@ -14,6 +14,9 @@ namespace MicShop.Services.Interfaces
         Task<ProductModel> Edit(int id, ProductModel productModel);
         Task<int> Delet(int id);
         bool ProductModelExists(int id);
+        Task<List<ProductModel>> GetProductsByCategory(int? id);
+        Task<List<ProductModel>> GetLastProducts(int? id);
+
     }
 }
 

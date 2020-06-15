@@ -44,13 +44,17 @@ namespace MicShop.Core.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CategoryID")
+                    b.Property<int>("CategoryID")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ImageBase64")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("OldPrice")
@@ -60,7 +64,9 @@ namespace MicShop.Core.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Sku")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(18)")
+                        .HasMaxLength(18);
 
                     b.HasKey("ID");
 
@@ -73,7 +79,9 @@ namespace MicShop.Core.Migrations
                 {
                     b.HasOne("MicShop.Core.Entities.CategoryModel", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("CategoryID");
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
