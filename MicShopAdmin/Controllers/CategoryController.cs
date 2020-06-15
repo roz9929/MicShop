@@ -14,8 +14,9 @@ namespace MicShop.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ICategoryService _categoryService;
         //private readonly 
+        private readonly ICategoryService _categoryService;
+
 
         public CategoryController(ICategoryService categoryService)
         {
@@ -56,9 +57,9 @@ namespace MicShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( CategoryModel categoryModel)
+        public async Task<IActionResult> Create(CategoryModel categoryModel)
         {
-            if(categoryModel.Image == null)
+            if (categoryModel.Image == null)
             {
                 ModelState.AddModelError("Image", "Please Select Image");
             }
@@ -69,7 +70,7 @@ namespace MicShop.Controllers
 
             if (ModelState.IsValid)
             {
-               
+
                 categoryModel.ImageBase64 = await SetImageIntoModel(categoryModel);
                 await _categoryService.Create(categoryModel);
                 return RedirectToAction(nameof(Index));
@@ -119,10 +120,10 @@ namespace MicShop.Controllers
                     {
                         categoryModel.ImageBase64 = await SetImageIntoModel(categoryModel);
                     }
-    
 
 
-                   await _categoryService.Edit(id, categoryModel);
+
+                    await _categoryService.Edit(id, categoryModel);
                 }
                 catch (Exception ex)
                 {
@@ -143,7 +144,7 @@ namespace MicShop.Controllers
             }
 
             var categoryModel = await _categoryService.Get(id);
-                
+
             if (categoryModel == null)
             {
                 return NotFound();

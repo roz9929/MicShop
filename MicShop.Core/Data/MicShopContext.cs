@@ -21,6 +21,7 @@ namespace MicShop.Core.Data
                 .WithOne(e => e.Category);
         }
         public DbSet<ProductModel> Product { get; set; }
+        public DbSet<UserModel> User { get; set; }
     }
 
 }

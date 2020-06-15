@@ -175,8 +175,9 @@ namespace MicShop.Controllers
         private bool CategoryModelExists(int id)
         {
             return _context.Category.Any(e => e.ID == id);
-        }
 
-        
+
+
+        }
     }
 }
