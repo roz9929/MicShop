@@ -24,6 +24,7 @@ namespace MicShop.Core.Entities
         public CategoryModel Category { get; set; }
         public string ImageBase64 { get; set; }
         
+        public string Details { get; set; }
         [NotMapped]
         public IFormFile Image { get; set; }
         public DateTime Created { get; set; }

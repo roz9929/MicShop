@@ -16,13 +16,15 @@ namespace MicShop.Controllers
         private readonly ILogger<ShopController> _logger;
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
-        
+        private readonly IUserService _userService;
 
-        public ShopController(ILogger<ShopController> logger, ICategoryService categoryService,IProductService productService)
+
+        public ShopController(ILogger<ShopController> logger, ICategoryService categoryService,IProductService productService, IUserService userService)
         {
             _logger = logger;
             _categoryService = categoryService;
             _productService = productService;
+            _userService = userService;
         }
 
         public async Task<IActionResult> Index()

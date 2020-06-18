@@ -58,7 +58,7 @@
                             </ul>
                         </div>
                         <div class="featured__item__text">
-                            <h6><a>@item.Name</a></h6>
+                            <h6><a  asp-controller="Product" asp-action="OneProductById" asp-route-id="@item.ID">@item.Name</a></h6>
                             <h5>@item.Price Դր</h5>
                         </div>
                     </div>

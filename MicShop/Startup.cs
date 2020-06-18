@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MicShop.Core.Data;
+using MicShop.Core.Entities;
 using MicShop.Services.Enjections;
 
 namespace MicShop
@@ -31,12 +33,15 @@ namespace MicShop
             services.AddDbContext<MicShopContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("MicShopContext")));
 
-            services.AddServicesDependencyInjections();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-        .AddCookie(options => //CookieAuthenticationOptions
+        .AddCookie(options =>
         {
-            options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
-        });
+            options.ExpireTimeSpan = TimeSpan.FromDays(7);
+        }
+        );
+
+
+            services.AddServicesDependencyInjections();
 
             services.AddControllersWithViews();
         }
@@ -56,7 +61,7 @@ namespace MicShop
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            
 
             app.UseAuthentication();    // аутентификация
             app.UseAuthorization();

@@ -1,0 +1,93 @@
+﻿@model MicShop.Models.RegisterViewModel
+<div class="col-sm-12 col-md-6">
+    <form asp-action="Register" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3>Գրանցում</h3>
+                </div>
+            </div>
+        </div>
+        <div id="register_bock">
+            <div class="">
+                <label for="">Մուտքագրեք Ձեր անունը <span style="color: red">*</span></label>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 form-group">
+                        <input asp-for="Name" onblur="isValid(this,2)" type="text" class="form-control validatereg" placeholder="անուն">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 form-group">
+                        <input asp-for="LastName" onblur="isValid(this,3)" type="text" class="form-control validatereg" placeholder="ազգանուն">
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="">Էլ. Փոստի հասցե <span style="color: red">*</span></label>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input asp-for="Email" type="text" onblur="isValid(this,6)" class="form-control validatereg">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="">Հասցե <span style="color: red">*</span></label>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input asp-for="Address" onblur="isValid(this,6)" type="text" class="form-control validatereg">
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="">Հեռախոսահամար <span style="color: red">*</span></label>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input asp-for="Phone" onblur="isValid(this,6)" type="text" class="form-control validatereg">
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="">Գաղտնաբառ <span style="color:red">*</span></label>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input asp-for="Password" onblur="isValid(this,6)" type="password" class="form-control validatereg passval">
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="">Կրկնել գաղտնաբառը <span style="color:red">*</span></label>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input asp-for="ConfirmPassword" type="password" onblur="isValid(this,6)" class="form-control validatereg passval">
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--<div class=" container col-md-12">
+        <div class="row">
+            <div class=" register-check">
+                <input type="checkbox" class="form-control register-checkbox" id="agreement">
+                <span style="color:red">*</span>
+                <label for="agreement" class="form-group">Համաձայն եմ եւ ընդունում եմ Օգտագործման պայմանները</label>
+            </div>
+        </div>
+    </div>-->
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-5">
+                    <button type="submit" class="site-btn">Գրանցում</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+</div>

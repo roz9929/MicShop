@@ -4,14 +4,16 @@ using MicShop.Core.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MicShop.Core.Migrations
 {
     [DbContext(typeof(MicShopContext))]
-    partial class MicShopContextModelSnapshot : ModelSnapshot
+    [Migration("20200617151418_first")]
+    partial class first
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -134,9 +136,6 @@ namespace MicShop.Core.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Details")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ImageBase64")
                         .HasColumnType("nvarchar(max)");
 
@@ -230,6 +229,7 @@ namespace MicShop.Core.Migrations
                         .HasMaxLength(64);
 
                     b.Property<byte[]>("Password")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Phone")

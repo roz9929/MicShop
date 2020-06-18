@@ -9,172 +9,89 @@ using Microsoft.EntityFrameworkCore;
 using MicShop.Core.Data;
 using MicShop.Core.Entities;
 using MicShop.Services.Interfaces;
-using MicShop.ViewModels;
+using MicShop.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace MicShop.Controllers
 {
     [Authorize]
+    
     public class AccountController : Controller
     {
         private readonly IUserService _userService;
-
-        public AccountController(IUserService userService)
+        private readonly ICategoryService _categoryService;
+        private readonly IProductService _productService;
+        public AccountController(IUserService userService, ICategoryService categoryService, IProductService productService)
         {
             _userService=userService;
+            _categoryService = categoryService;
+            _productService = productService;
         }
-        [AllowAnonymous]
+
+
         [HttpGet]
-        public IActionResult Login()
+        [AllowAnonymous]
+        public async Task<IActionResult> Login()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+
+            }
+            var categories = await _categoryService.GetAll();
+            var products = await _productService.GetAll();
+            ViewData["Categories"] = categories;
+            return View("Index");
         }
+
+        [HttpPost]
+        public IActionResult Login(LoginViewModel model)
+        {
+            ValidateResult validateResult = _userService.Validate("Email", model.Email, model.Password);
+
+            if (validateResult.Success)
+                _userService.SignIn(this.HttpContext, validateResult.User, false);
+            return this.RedirectToAction("Login");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult Logout()
+        {
+            _userService.SignOut(this.HttpContext);
+            return this.RedirectToAction("Login");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AllowAnonymous]
-        public async Task<IActionResult> Authenticate(LoginViewModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = await _userService.Authenticate(model.Email,model.Password);
-               
-                if (user != null)
+                if (string.IsNullOrWhiteSpace(model.Password))
+                    ModelState.AddModelError("", "Password is required");
+                if (model.Password != model.ConfirmPassword)
+                    ModelState.AddModelError("", "Enter the right password");
+
+                var validate = _userService.Validate("Email", model.Email);
+                if (validate.Success)
                 {
-                   return RedirectToAction("Index", "Home");
+                    ModelState.AddModelError("", "Email \"" + model.Email + "\" is already taken");
                 }
-                ModelState.AddModelError("", "Wrong data");
+                UserModel user = new UserModel();
+                user.Email = model.Email;
+                user.LastName = model.LastName;
+                user.Name = model.Name;
+                user.Phone = model.Phone;
+                user.Address = model.Address;
+                user.Created = DateTime.Now;
+               
+                _userService.SignUp(user, "email", user.Email, model.Password);
+                _userService.AddToRole(user, "user");
             }
-            return View(model);
+            var categories = await _categoryService.GetAll();
+            var products = await _productService.GetAll();
+            ViewData["Categories"] = categories;
+            return View("Index");
         }
-
-        //// GET: Account
-        //public async Task<IActionResult> Index()
-        //{
-        //    return View(await _context.User.ToListAsync());
-        //}
-
-        //// GET: Account/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var userModel = await _context.User
-        //        .FirstOrDefaultAsync(m => m.ID == id);
-        //    if (userModel == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(userModel);
-        //}
-
-        //// GET: Account/Create
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
-
-        //// POST: Account/Create
-        //// To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        //// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Login(LoginModel userModel)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(userModel);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(userModel);
-        //}
-
-        //// GET: Account/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var userModel = await _context.User.FindAsync(id);
-        //    if (userModel == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(userModel);
-        //}
-
-        //// POST: Account/Edit/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        //// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("ID,Name,LastName,Phone,Email,Password")] UserModel userModel)
-        //{
-        //    if (id != userModel.ID)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(userModel);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!UserModelExists(userModel.ID))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(userModel);
-        //}
-
-        //// GET: Account/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var userModel = await _context.User
-        //        .FirstOrDefaultAsync(m => m.ID == id);
-        //    if (userModel == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(userModel);
-        //}
-
-        //// POST: Account/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var userModel = await _context.User.FindAsync(id);
-        //    _context.User.Remove(userModel);
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
-
-        //private bool UserModelExists(int id)
-        //{
-        //    return _context.User.Any(e => e.ID == id);
-        //}
     }
 }

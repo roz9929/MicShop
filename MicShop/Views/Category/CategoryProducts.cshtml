@@ -111,53 +111,53 @@
                             <div class="latest-product__slider owl-carousel">
                                 @for (var i = 0; i < lastProductList.Count; i += 3)
                                 {
-                                <div class="latest-prdouct__slider__item">
-                                    @{ if (lastProductList.ElementAtOrDefault(i) != null)
-                                        {
-                                            <a href="#" class="latest-product__item">
-                                                <div class="latest-product__item__pic">
-                                                    <img style="width:110px;height:110px;" src="data:image/png;base64, @lastProductList[i].ImageBase64" alt="">
-                                                </div>
-                                                <div class="latest-product__item__text">
-                                                    <h6>@lastProductList[i].Name</h6>
-                                                    <span>@lastProductList[i].Price ԴՐ</span>
-                                                </div>
-                                            </a>
-                                        }
-                                        }
-                                    @{ if (lastProductList.ElementAtOrDefault(i + 1) != null)
-                                        {
-                                                    <a href="#" class="latest-product__item">
-                                                        <div class="latest-product__item__pic">
-                                                            <img style="width:110px;height:110px;" src="data:image/png;base64, @lastProductList[i + 1].ImageBase64" alt="">
-                                                        </div>
-                                                        <div class="latest-product__item__text">
-                                                            <h6>@lastProductList[i + 1].Name</h6>
-                                                            <span>@lastProductList[i + 1].Price ԴՐ</span>
-                                                        </div>
-                                                    </a>
-                                        }
-                                        }
-                                    @{ if (lastProductList.ElementAtOrDefault(i + 2) != null)
-                                        {
-                                                                        <a href="#" class="latest-product__item">
-                                                                            <div class="latest-product__item__pic">
-                                                                                <img style="width:110px;height:110px;" src="data:image/png;base64, @lastProductList[i + 2].ImageBase64" alt="">
-                                                                            </div>
-                                                                            <div class="latest-product__item__text">
-                                                                                <h6>@lastProductList[i+2].Name</h6>
-                                                                                <span>@lastProductList[i+2].Price ԴՐ</span>
-                                                                            </div>
-                                                                        </a>
+                                    <div class="latest-prdouct__slider__item">
+                                        @{ if (lastProductList.ElementAtOrDefault(i) != null)
+                                            {
+                                                <a asp-controller="Product" asp-action="OneProductById" asp-route-id="@lastProductList[i].ID" class="latest-product__item">
+                                                    <div class="latest-product__item__pic">
+                                                        <img style="width:110px;height:110px;" src="data:image/png;base64, @lastProductList[i].ImageBase64" alt="">
+                                                    </div>
+                                                    <div class="latest-product__item__text">
+                                                        <h6>@lastProductList[i].Name</h6>
+                                                        <span>@lastProductList[i].Price ԴՐ</span>
+                                                    </div>
+                                                </a>
                                             }
                                         }
-                                   </div>
+                                        @{ if (lastProductList.ElementAtOrDefault(i + 1) != null)
+                                            {
+                                                <a asp-controller="Product" asp-action="OneProductById" asp-route-id="@lastProductList[i+1].ID" class="latest-product__item">
+                                                    <div class="latest-product__item__pic">
+                                                        <img style="width:110px;height:110px;" src="data:image/png;base64, @lastProductList[i + 1].ImageBase64" alt="">
+                                                    </div>
+                                                    <div class="latest-product__item__text">
+                                                        <h6>@lastProductList[i + 1].Name</h6>
+                                                        <span>@lastProductList[i + 1].Price ԴՐ</span>
+                                                    </div>
+                                                </a>
+                                            }
+                                        }
+                                        @{ if (lastProductList.ElementAtOrDefault(i + 2) != null)
+                                            {
+                                                <a asp-controller="Product" asp-action="OneProductById" asp-route-id="@lastProductList[i+2].ID" class="latest-product__item">
+                                                    <div class="latest-product__item__pic">
+                                                        <img style="width:110px;height:110px;" src="data:image/png;base64, @lastProductList[i + 2].ImageBase64" alt="">
+                                                    </div>
+                                                    <div class="latest-product__item__text">
+                                                        <h6>@lastProductList[i + 2].Name</h6>
+                                                        <span>@lastProductList[i + 2].Price ԴՐ</span>
+                                                    </div>
+                                                </a>
+                                            }
+                                        }
+                                    </div>
                                 }
                             </div>
                         </div>
+                    </div>
                 </div>
             </div>
-        </div>
             <div class="col-lg-9 col-md-7">
 
                 <div class="filter__item">
@@ -197,7 +197,7 @@
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
-                                    <h6><a href="#">@item.Name</a></h6>
+                                    <h6><a asp-controller="Product" asp-action="OneProductById" asp-route-id="@item.ID">@item.Name</a></h6>
                                     <h5>@item.Price ԴՐ</h5>
                                 </div>
                             </div>

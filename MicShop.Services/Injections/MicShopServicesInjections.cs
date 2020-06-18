@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
-using MicShop.Helpers;
+using MicShop.Core.Data;
+using MicShop.Core.Entities;
 using MicShop.Services.Implamentantions;
 using MicShop.Services.Interfaces;
 using System;
@@ -15,10 +17,6 @@ namespace MicShop.Services.Enjections
         {
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IProductService, ProductService>();
-            services.AddAuthentication("BasicAuthentication")
-               .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
-
-            // configure DI for application services
             services.AddScoped<IUserService, UserService>();
         }
     }
