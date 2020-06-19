@@ -11,31 +11,28 @@ using MicShop.Services.Interfaces;
 
 namespace MicShop.Controllers
 {
-    public class CategoryController : Controller
+    public class ContactController : Controller
     {
-        
-        private readonly ICategoryService _categoryService;
-        private readonly IProductService _productService;
         private readonly IContactService _contactService;
+        private readonly ICategoryService _categoryService;
 
-        public CategoryController(ICategoryService categoryService, IProductService productService, IContactService contactService)
+        public ContactController(IContactService contactService,ICategoryService categoryService)
         {
-            _categoryService = categoryService;
-            _productService = productService;
             _contactService = contactService;
+            _categoryService = categoryService;
         }
 
-        // GET: Category
+        // GET: Contact
         public async Task<IActionResult> Index()
         {
-            var categories = await _categoryService.GetAll();
-            ViewData["Categories"] = categories;
             var contact =  _contactService.Get();
             ViewData["contact"] = contact;
-            return View();
+            var categories = await _categoryService.GetAll();
+            ViewData["Categories"] = categories;
+            return View(contact);
         }
 
-        //// GET: Category/Details/5
+        //// GET: Contact/Details/5
         //public async Task<IActionResult> Details(int? id)
         //{
         //    if (id == null)
@@ -43,39 +40,39 @@ namespace MicShop.Controllers
         //        return NotFound();
         //    }
 
-        //    var categoryModel = await _context.Category
+        //    var contactModel = await _context.Contact
         //        .FirstOrDefaultAsync(m => m.ID == id);
-        //    if (categoryModel == null)
+        //    if (contactModel == null)
         //    {
         //        return NotFound();
         //    }
 
-        //    return View(categoryModel);
+        //    return View(contactModel);
         //}
 
-        //// GET: Category/Create
+        //// GET: Contact/Create
         //public IActionResult Create()
         //{
         //    return View();
         //}
 
-        //// POST: Category/Create
+        //// POST: Contact/Create
         //// To protect from overposting attacks, enable the specific properties you want to bind to, for 
         //// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("ID,Name,ImageBase64")] CategoryModel categoryModel)
+        //public async Task<IActionResult> Create([Bind("ID,Phone,Address,Email,OpenFrom,OpenTo,FaceBook,Instagram,Twitter")] ContactModel contactModel)
         //{
         //    if (ModelState.IsValid)
         //    {
-        //        _context.Add(categoryModel);
+        //        _context.Add(contactModel);
         //        await _context.SaveChangesAsync();
         //        return RedirectToAction(nameof(Index));
         //    }
-        //    return View(categoryModel);
+        //    return View(contactModel);
         //}
 
-        //// GET: Category/Edit/5
+        //// GET: Contact/Edit/5
         //public async Task<IActionResult> Edit(int? id)
         //{
         //    if (id == null)
@@ -83,22 +80,22 @@ namespace MicShop.Controllers
         //        return NotFound();
         //    }
 
-        //    var categoryModel = await _context.Category.FindAsync(id);
-        //    if (categoryModel == null)
+        //    var contactModel = await _context.Contact.FindAsync(id);
+        //    if (contactModel == null)
         //    {
         //        return NotFound();
         //    }
-        //    return View(categoryModel);
+        //    return View(contactModel);
         //}
 
-        //// POST: Category/Edit/5
+        //// POST: Contact/Edit/5
         //// To protect from overposting attacks, enable the specific properties you want to bind to, for 
         //// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("ID,Name,ImageBase64")] CategoryModel categoryModel)
+        //public async Task<IActionResult> Edit(int id, [Bind("ID,Phone,Address,Email,OpenFrom,OpenTo,FaceBook,Instagram,Twitter")] ContactModel contactModel)
         //{
-        //    if (id != categoryModel.ID)
+        //    if (id != contactModel.ID)
         //    {
         //        return NotFound();
         //    }
@@ -107,12 +104,12 @@ namespace MicShop.Controllers
         //    {
         //        try
         //        {
-        //            _context.Update(categoryModel);
+        //            _context.Update(contactModel);
         //            await _context.SaveChangesAsync();
         //        }
         //        catch (DbUpdateConcurrencyException)
         //        {
-        //            if (!CategoryModelExists(categoryModel.ID))
+        //            if (!ContactModelExists(contactModel.ID))
         //            {
         //                return NotFound();
         //            }
@@ -123,10 +120,10 @@ namespace MicShop.Controllers
         //        }
         //        return RedirectToAction(nameof(Index));
         //    }
-        //    return View(categoryModel);
+        //    return View(contactModel);
         //}
 
-        //// GET: Category/Delete/5
+        //// GET: Contact/Delete/5
         //public async Task<IActionResult> Delete(int? id)
         //{
         //    if (id == null)
@@ -134,52 +131,30 @@ namespace MicShop.Controllers
         //        return NotFound();
         //    }
 
-        //    var categoryModel = await _context.Category
+        //    var contactModel = await _context.Contact
         //        .FirstOrDefaultAsync(m => m.ID == id);
-        //    if (categoryModel == null)
+        //    if (contactModel == null)
         //    {
         //        return NotFound();
         //    }
 
-        //    return View(categoryModel);
+        //    return View(contactModel);
         //}
-        public async Task<IActionResult> GetCategoryProducts(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var categoryProducts = await _categoryService.GetCategoryProducts(id);
-            if (categoryProducts == null)
-            {
-                return NotFound();
-            }
-            var categories = await _categoryService.GetAll();
-            var lastProducts = await _productService.GetLastProducts(id);
-            //var products = await _productService.GetAll();
-            ViewData["Categories"] = categories;
-            ViewData["lastProducts"] = lastProducts;
-            //ViewData["Products"] = products;
-            return View("CategoryProducts", categoryProducts);
-        }
-        //// POST: Category/Delete/5
+        //// POST: Contact/Delete/5
         //[HttpPost, ActionName("Delete")]
         //[ValidateAntiForgeryToken]
         //public async Task<IActionResult> DeleteConfirmed(int id)
         //{
-        //    var categoryModel = await _context.Category.FindAsync(id);
-        //    _context.Category.Remove(categoryModel);
+        //    var contactModel = await _context.Contact.FindAsync(id);
+        //    _context.Contact.Remove(contactModel);
         //    await _context.SaveChangesAsync();
         //    return RedirectToAction(nameof(Index));
         //}
 
-        //private bool CategoryModelExists(int id)
+        //private bool ContactModelExists(int id)
         //{
-        //    return _context.Category.Any(e => e.ID == id);
-
-
-
+        //    return _context.Contact.Any(e => e.ID == id);
         //}
     }
 }

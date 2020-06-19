@@ -4,57 +4,22 @@ using MicShop.Core.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MicShop.Core.Migrations
 {
     [DbContext(typeof(MicShopContext))]
-    partial class MicShopContextModelSnapshot : ModelSnapshot
+    [Migration("20200618084535_contactMigration")]
+    partial class contactMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("MicShop.Core.Entities.CartItemModel", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("CartModelID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("CartModelID");
-
-                    b.HasIndex("ProductID");
-
-                    b.ToTable("CartItem");
-                });
-
-            modelBuilder.Entity("MicShop.Core.Entities.CartModel", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Cart");
-                });
 
             modelBuilder.Entity("MicShop.Core.Entities.CategoryModel", b =>
                 {
@@ -167,28 +132,6 @@ namespace MicShop.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CredentialTypes");
-                });
-
-            modelBuilder.Entity("MicShop.Core.Entities.OrderModel", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("CartID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("CartID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("MicShop.Core.Entities.Permission", b =>
@@ -351,17 +294,6 @@ namespace MicShop.Core.Migrations
                     b.ToTable("UserRoles");
                 });
 
-            modelBuilder.Entity("MicShop.Core.Entities.CartItemModel", b =>
-                {
-                    b.HasOne("MicShop.Core.Entities.CartModel", null)
-                        .WithMany("ItemList")
-                        .HasForeignKey("CartModelID");
-
-                    b.HasOne("MicShop.Core.Entities.ProductModel", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductID");
-                });
-
             modelBuilder.Entity("MicShop.Core.Entities.Credential", b =>
                 {
                     b.HasOne("MicShop.Core.Entities.CredentialType", "CredentialType")
@@ -375,17 +307,6 @@ namespace MicShop.Core.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("MicShop.Core.Entities.OrderModel", b =>
-                {
-                    b.HasOne("MicShop.Core.Entities.CartModel", "Cart")
-                        .WithMany()
-                        .HasForeignKey("CartID");
-
-                    b.HasOne("MicShop.Core.Entities.UserModel", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID");
                 });
 
             modelBuilder.Entity("MicShop.Core.Entities.ProductModel", b =>

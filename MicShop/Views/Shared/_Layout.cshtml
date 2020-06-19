@@ -1,5 +1,9 @@
 ﻿@inject MicShop.Services.Interfaces.IUserService UserService
+
 @using System.Security.Claims
+@{
+    var Contact = ViewData["contact"] as MicShop.Core.Entities.ContactModel;
+}
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -23,6 +27,10 @@
     <link rel="stylesheet" href="~/css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="~/css/style.css" type="text/css">
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/jquery.nice-select.min.js"></script>
+    <script src="~/js/jquery-ui.min.js"></script>
+    <script src="~/js/jquery.slicknav.js"></script>
 </head>
 
 <body>
@@ -39,8 +47,8 @@
         </div>
         <div class="humberger__menu__cart">
             <ul>
-                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                <li><a><i class="fa fa-heart"></i> <span class="wishNum">1</span></a></li>
+                <li><a asp-controller="Shop" asp-action="Basket"><i class="fa fa-shopping-bag"></i> <span class="basketNum">3</span></a></li>
             </ul>
             <div class="header__cart__price">item: <span>$150.00</span></div>
         </div>
@@ -72,15 +80,15 @@
             <ul>
                 <li class="active">
                     <a asp-area="" asp-controller="Shop" asp-action="Index">Shop</a>
+                    <a asp-area="" asp-controller="Contact" asp-action="Index">Contact</a>
                 </li>
             </ul>
         </nav>
         <div id="mobile-menu-wrap"></div>
         <div class="header__top__right__social">
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-twitter"></i></a>
-            <a href="#"><i class="fa fa-linkedin"></i></a>
-            <a href="#"><i class="fa fa-pinterest-p"></i></a>
+            <a href="@Contact.FaceBook"><i class="fa fa-facebook"></i></a>
+            <a href="@Contact.Twitter"><i class="fa fa-twitter"></i></a>
+            <a href="@Contact.Instagram"><i class="fa fa-instagram"></i></a>
         </div>
         <div class="humberger__menu__contact">
 
@@ -99,10 +107,9 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="header__top__right">
                             <div class="header__top__right__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-linkedin"></i></a>
-                                <a href="#"><i class="fa fa-pinterest-p"></i></a>
+                                <a href="@Contact.FaceBook"><i class="fa fa-facebook"></i></a>
+                                <a href="@Contact.Twitter"><i class="fa fa-twitter"></i></a>
+                                <a href="@Contact.Instagram"><i class="fa fa-instagram"></i></a>
                             </div>
                             <div class="header__top__right__language">
                                 <img src="~/img/language.png" alt="">
@@ -145,16 +152,16 @@
                                 <a asp-area="" asp-controller="Shop" asp-action="Index">Shop</a>
                             </li>
                             @*<li><a href="./shop-grid.html">Cart</a></li>
-                                <li><a href="./blog.html">Blog</a></li>
-                                <li><a href="./contact.html">Contact</a></li>*@
+                                <li><a href="./blog.html">Blog</a></li>*@
+                            <li><a asp-area="" asp-controller="Contact" asp-action="Index">Contact</a></li>
                         </ul>
                     </nav>
                 </div>
                 <div class="col-lg-3">
                     <div class="header__cart">
                         <ul>
-                            <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                            <li><a><i class="fa fa-heart"></i> <span class="wishNum">1</span></a></li>
+                            <li><a asp-controller="Shop" asp-action="Basket"><i class="fa fa-shopping-bag"></i> <span class="basketNum">3</span></a></li>
                         </ul>
                         <div class="header__cart__price">item: <span>$150.00</span></div>
                     </div>
@@ -204,7 +211,7 @@
                                 <i class="fa fa-phone"></i>
                             </div>
                             <div class="hero__search__phone__text">
-                                <h5>+65 11.188.888</h5>
+                                <h5>@Contact.Phone</h5>
                                 <span>support 24/7 time</span>
                             </div>
                         </div>
@@ -243,9 +250,9 @@
                             <a href="./index.html"><img src="~/img/logo.png" alt=""></a>
                         </div>
                         <ul>
-                            <li>Address: 60-49 Road 11378 New York</li>
-                            <li>Phone: +65 11.188.888</li>
-                            <li>Email: hello@colorlib.com</li>
+                            <li>Address: @Contact.Address</li>
+                            <li>Phone: @Contact.Phone</li>
+                            <li>Email: @Contact.Email</li>
                         </ul>
                     </div>
                 </div>
@@ -279,10 +286,9 @@
                             <button type="submit" class="site-btn">Subscribe</button>
                         </form>
                         <div class="footer__widget__social">
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-instagram"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-pinterest"></i></a>
+                            <a href="@Contact.FaceBook"><i class="fa fa-facebook"></i></a>
+                            <a href="@Contact.Instagram"><i class="fa fa-instagram"></i></a>
+                            <a href="@Contact.Twitter"><i class="fa fa-twitter"></i></a>
                         </div>
                     </div>
                 </div>
@@ -306,14 +312,13 @@
     </footer>
     <!-- Footer Section End -->
     <!-- Js Plugins -->
-    <script src="~/js/jquery-3.3.1.min.js"></script>
+
     <script src="~/js/bootstrap.min.js"></script>
-    <script src="~/js/jquery.nice-select.min.js"></script>
-    <script src="~/js/jquery-ui.min.js"></script>
-    <script src="~/js/jquery.slicknav.js"></script>
+    
     <script src="~/js/mixitup.min.js"></script>
     <script src="~/js/owl.carousel.min.js"></script>
     <script src="~/js/main.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 
 

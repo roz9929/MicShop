@@ -17,14 +17,16 @@ namespace MicShop.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
         private readonly IUserService _userService;
+        private readonly IContactService _contactService;
 
 
-        public ShopController(ILogger<ShopController> logger, ICategoryService categoryService,IProductService productService, IUserService userService)
+        public ShopController(ILogger<ShopController> logger, IContactService contactService, ICategoryService categoryService,IProductService productService, IUserService userService)
         {
             _logger = logger;
             _categoryService = categoryService;
             _productService = productService;
             _userService = userService;
+            _contactService = contactService;
         }
 
         public async Task<IActionResult> Index()
@@ -33,6 +35,8 @@ namespace MicShop.Controllers
             var products = await _productService.GetAll();
             ViewData["Categories"] = categories;
             ViewData["Products"] = products;
+            var contact = _contactService.Get();
+            ViewData["contact"] = contact;
             return View();
         }
 
@@ -47,5 +51,14 @@ namespace MicShop.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Basket()
+        {
+            var categories = await _categoryService.GetAll();
+            ViewData["Categories"] = categories;
+            var contact = _contactService.Get();
+            ViewData["contact"] = contact;
+            return View();
+        }
     }
 }

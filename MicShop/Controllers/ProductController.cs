@@ -15,11 +15,13 @@ namespace MicShop.Controllers
     {
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
+        private readonly IContactService _contactService;
         
-        public ProductController(IProductService productService, ICategoryService categoryService)
+        public ProductController(IProductService productService, ICategoryService categoryService, IContactService contactService)
         {
             _productService = productService;
             _categoryService = categoryService;
+            _contactService = contactService;
         }
 
         // GET: Product
@@ -30,7 +32,8 @@ namespace MicShop.Controllers
             var products = await _categoryService.GetCategoryProducts(model.Category.ID);
             ViewData["Categories"] = categories;
             ViewData["Products"] = products;
-            
+            var contact =  _contactService.Get();
+            ViewData["contact"] = contact;
 
             return View("Index",model);
         }

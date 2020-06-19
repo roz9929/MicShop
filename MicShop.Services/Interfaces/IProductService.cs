@@ -16,6 +16,7 @@ namespace MicShop.Services.Interfaces
         bool ProductModelExists(int id);
         Task<List<ProductModel>> GetProductsByCategory(int? id);
         Task<List<ProductModel>> GetLastProducts(int? id);
+        Task<List<ProductModel>> GetProductsByIdList(List<int> IdList);
 
     }
 }

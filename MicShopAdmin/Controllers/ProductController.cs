@@ -127,7 +127,7 @@ namespace MicShop.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductModelExists(productModel.ID))
+                    if (!_productService.ProductModelExists(productModel.ID))
                     {
                         return NotFound();
                     }
@@ -168,10 +168,7 @@ namespace MicShop.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductModelExists(int id)
-        {
-            return _productService.ProductModelExists(id);
-        }
+       
         private async Task<string> SetImageIntoModel(ProductModel productModel)
         {
             MemoryStream ms = new MemoryStream();
@@ -181,5 +178,20 @@ namespace MicShop.Controllers
             return base64Image;
 
         }
+
+
+        public class IdList
+        {
+            public List<int> idlist { get; set; }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetProductsByIdList([FromBody] IdList idList)
+        {
+            List<ProductModel> productsList = await _productService.GetProductsByIdList(idList.idlist);
+            return Json(productsList);
+        }
+
+        
     }
 }

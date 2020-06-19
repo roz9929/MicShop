@@ -10,12 +10,16 @@ namespace MicShop.Models
     public class RegisterViewModel 
     {
         [Required(ErrorMessage = "Name is required ")]
+        [DataType(DataType.Text)]
         public string Name { get; set; }
         [Required(ErrorMessage = "Last Name is required ")]
+        [DataType(DataType.Text)]
         public string LastName { get; set; }
         [Required(ErrorMessage = "Phone number is required ")]
+        [DataType(DataType.PhoneNumber)]
         public string Phone { get; set; }
         [Required(ErrorMessage = "Email is required")]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
         [Required(ErrorMessage = "Address is required")]
         public string Address { get; set; }

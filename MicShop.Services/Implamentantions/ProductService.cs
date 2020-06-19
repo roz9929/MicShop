@@ -90,5 +90,11 @@ namespace MicShop.Services.Implamentantions
             return lastProducts;
 
         }
+        
+        public async Task<List<ProductModel>> GetProductsByIdList(List<int> IdList)
+        {
+            var prodList= await _context.Product.ToListAsync();
+            return  prodList.Where(x=>IdList.Contains(x.ID)).ToList();
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace MicShop.Core.Data
         {
         }
 
-        public DbSet<CategoryModel> Category { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CategoryModel>()
@@ -81,7 +81,9 @@ namespace MicShop.Core.Data
                 etb.ToTable("RolePermissions");
             }
             );
+           
         }
+        public DbSet<CategoryModel> Category { get; set; }
         public DbSet<ProductModel> Product { get; set; }
         public DbSet<UserModel> Users { get; set; }
         public DbSet<CredentialType> CredentialType { get; set; }
@@ -90,6 +92,13 @@ namespace MicShop.Core.Data
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
+        public DbSet<ContactModel> Contact { get; set; }
+
+        public DbSet<CartItemModel> CartItem { get; set; }
+
+        public DbSet<CartModel> Cart { get; set; }
+
+        public DbSet<OrderModel> Order { get; set; }
     }
 
 }

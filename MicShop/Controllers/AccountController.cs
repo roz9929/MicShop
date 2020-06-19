@@ -15,17 +15,18 @@ using Microsoft.AspNetCore.Identity;
 namespace MicShop.Controllers
 {
     [Authorize]
-    
     public class AccountController : Controller
     {
         private readonly IUserService _userService;
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
-        public AccountController(IUserService userService, ICategoryService categoryService, IProductService productService)
+        private readonly IContactService _contactService;
+        public AccountController(IUserService userService, IContactService contactService, ICategoryService categoryService, IProductService productService)
         {
             _userService=userService;
             _categoryService = categoryService;
             _productService = productService;
+            _contactService = contactService;
         }
 
 
@@ -35,33 +36,40 @@ namespace MicShop.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-
+                return RedirectToAction("Index", "Shop");
             }
             var categories = await _categoryService.GetAll();
             var products = await _productService.GetAll();
+            var contact = _contactService.Get();
+            ViewData["contact"] = contact;
             ViewData["Categories"] = categories;
+            
             return View("Index");
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public IActionResult Login(LoginViewModel model)
         {
             ValidateResult validateResult = _userService.Validate("Email", model.Email, model.Password);
-
-            if (validateResult.Success)
+            if (validateResult.Success) { 
                 _userService.SignIn(this.HttpContext, validateResult.User, false);
-            return this.RedirectToAction("Login");
+                return RedirectToAction("Index", "Shop");
+            }
+            else
+            return RedirectToAction("Login");
         }
 
         [HttpPost]
         [AllowAnonymous]
         public IActionResult Logout()
         {
-            _userService.SignOut(this.HttpContext);
-            return this.RedirectToAction("Login");
+            _userService.SignOut(HttpContext);
+            return RedirectToAction("Login");
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
@@ -84,14 +92,21 @@ namespace MicShop.Controllers
                 user.Phone = model.Phone;
                 user.Address = model.Address;
                 user.Created = DateTime.Now;
-               
                 _userService.SignUp(user, "email", user.Email, model.Password);
                 _userService.AddToRole(user, "user");
+                ValidateResult validateResult = _userService.Validate("Email", model.Email, model.Password);
+                if (validateResult.Success)
+                {
+                    await _userService.SignIn(this.HttpContext, validateResult.User, false);
+                    return RedirectToAction("Index", "Shop");
+                }
             }
             var categories = await _categoryService.GetAll();
             var products = await _productService.GetAll();
             ViewData["Categories"] = categories;
-            return View("Index");
+            var contact = _contactService.Get();
+            ViewData["contact"] = contact;
+            return View("Login");
         }
     }
 }
