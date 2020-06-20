@@ -35,7 +35,7 @@ namespace MicShop.Services.Implamentantions
 
         public async Task<List<OrderModel>> GetAll()
         {
-            return await _context.Order.ToListAsync();
+            return await _context.Order.Include(user=>user.User).Include(cart=>cart.Cart).ToListAsync();
         }
 
         public async Task<OrderModel> GetOrderById(int? id)

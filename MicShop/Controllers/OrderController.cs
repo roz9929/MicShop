@@ -69,7 +69,7 @@ namespace MicShop.Controllers
             ViewData["Categories"] = categories;
             var contact = _contactService.Get();
             ViewData["contact"] = contact;
-            return View();
+            return View("CheckOut");
         }
         public async Task<IActionResult> CheckOut()
         {

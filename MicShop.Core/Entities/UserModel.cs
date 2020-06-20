@@ -19,12 +19,7 @@ namespace MicShop.Core.Entities
         public string Email { get; set; }
         [Required(ErrorMessage = "Address is required")]
         public string Address { get; set; }
-        
-        [DataType(DataType.Password)]
-        public byte[] Password { get; set; }
-        //public byte[] PasswordSalt { get; set; }
         public DateTime Created { get; set; }
-
         public virtual ICollection<Credential> Credentials { get; set; }
     }
 
