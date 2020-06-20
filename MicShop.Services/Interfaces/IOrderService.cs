@@ -10,6 +10,9 @@ namespace MicShop.Services.Interfaces
     {
         Task<List<OrderModel>> GetAll();
         Task<OrderModel> GetOrderById(int? id);
+        Task<List<OrderModel>> GetOrdersByUserId(int id);
+
+        Task<OrderModel> Create(CartModel cartModel, UserModel userModel);
 
     }
 }

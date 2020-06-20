@@ -60,5 +60,15 @@ namespace MicShop.Controllers
             ViewData["contact"] = contact;
             return View();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Wish()
+        {
+            var categories = await _categoryService.GetAll();
+            ViewData["Categories"] = categories;
+            var contact = _contactService.Get();
+            ViewData["contact"] = contact;
+            return View();
+        }
     }
 }
