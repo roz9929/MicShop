@@ -1,5 +1,12 @@
 ﻿@model MicShop.Core.Entities.CartModel
-     <!-- Checkout Section Begin -->
+@{
+    string funcName = "Create";
+    @if (User.Identity.IsAuthenticated)
+    {
+        funcName = "CreateAuth";
+    }
+}
+<!-- Checkout Section Begin -->
 <section class="checkout spad">
     <div class="container">
         @*<div class="row">
@@ -11,11 +18,14 @@
             </div>*@
         <div class="checkout__form">
             <h4>Billing Details</h4>
-            <form asp-controller="Order" asp-action="Create">
+            <form asp-controller="Order" asp-action="@funcName">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="row">
                     <div class="col-lg-8 col-md-6">
-                        @{await Html.RenderPartialAsync("CheckOutUserDataPartialView");}
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            await Html.RenderPartialAsync("CheckOutUserDataPartialView");
+                        }
                         <div class="checkout__input">
                             <p>Order notes<span>*</span></p>
                             <input type="text" name="OrderNotes"
@@ -29,32 +39,35 @@
                             <ul class="productBody">
                             </ul>
                             @*<div class="checkout__order__subtotal">Subtotal <span>$750.99</span></div>*@
-                            <div class="checkout__order__total">Total <span class="totalPrice"></span></div>
-                            <div class="checkout__input__checkbox">
-                                <label for="acc-or">
-                                    Create an account?
-                                    <input type="checkbox" id="acc-or">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
+                            <div class="checkout__order__total">Total <span class="totalPrice"></span><i class="dram"> AMD</i></div>
+                            @if (!User.Identity.IsAuthenticated)
+                            {
+                                <div class="checkout__input__checkbox">
+                                    <label for="acc-or">
+                                        Create an account?
+                                        <input type="checkbox" id="acc-or">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                            }
                             @*<p>
-                                Lorem ipsum dolor sit amet, consectetur adip elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua.
-                            </p>
-                            <div class="checkout__input__checkbox">
-                                <label for="payment">
-                                    Check Payment
-                                    <input type="checkbox" id="payment">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="checkout__input__checkbox">
-                                <label for="paypal">
-                                    Paypal
-                                    <input type="checkbox" id="paypal">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>*@
+                                    Lorem ipsum dolor sit amet, consectetur adip elit, sed do eiusmod tempor incididunt
+                                    ut labore et dolore magna aliqua.
+                                </p>
+                                <div class="checkout__input__checkbox">
+                                    <label for="payment">
+                                        Check Payment
+                                        <input type="checkbox" id="payment">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="checkout__input__checkbox">
+                                    <label for="paypal">
+                                        Paypal
+                                        <input type="checkbox" id="paypal">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>*@
                             <button type="submit" class="site-btn">PLACE ORDER</button>
                         </div>
                     </div>
@@ -62,7 +75,7 @@
                 </div>
 
             </form>
-    </div>
+        </div>
     </div>
 </section>
 <!-- Checkout Section End -->
@@ -94,7 +107,7 @@
                         let product = list[i];
                         console.log(product);
                         html += ''
-                            + '<li>' + product.name + '<span class="TotalItem[' + i + ']">' + product.price * baskets.ProductList[i].Quantity + '<i class="dram" >AMD</i> </span> </li>'
+                            + '<li>' + product.name + '<span id="TotalItem[' + i + ']">' + product.price * baskets.ProductList[i].Quantity + '<i class="dram" >AMD</i> </span> </li>'
                             + '<input type="hidden" value=' + product.id + ' name="ItemList[' + i + '].ProductId">'
                             + '<input type="hidden" value=' + baskets.ProductList[i].Quantity + ' name="ItemList[' + i + '].Quantity">'
                     }

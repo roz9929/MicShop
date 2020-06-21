@@ -38,6 +38,31 @@ namespace MicShop.Controllers
         //POST: Order/Create
         //To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateAuth(CartModel cart, string OrderNotes)
+        {
+            if (ModelState.IsValid)
+            {
+
+                if(!User.Identity.IsAuthenticated)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                UserModel user = _userService.GetCurrentUser(HttpContext);
+                await _orderService.Create(cart, user, OrderNotes);
+
+            }
+
+            var categories = await _categoryService.GetAll();
+            ViewData["Categories"] = categories;
+            var contact = _contactService.Get();
+            ViewData["contact"] = contact;
+            return View("Done");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CartModel cart, OrderUserViewModel model,string OrderNotes)
@@ -77,7 +102,7 @@ namespace MicShop.Controllers
             ViewData["Categories"] = categories;
             var contact = _contactService.Get();
             ViewData["contact"] = contact;
-            return View("CheckOut");
+            return View("Done");
         }
         public async Task<IActionResult> CheckOut()
         {

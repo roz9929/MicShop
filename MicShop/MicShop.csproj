@@ -15,7 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MicShop.Core\MicShop.Core.csproj" />
     <ProjectReference Include="..\MicShop.Services\MicShop.Services.csproj" />
-    <ProjectReference Include="..\MicShopAdmin\MicShopAdmin.csproj" />
+    <ProjectReference Include="..\MicShopAdmin\MicShop.Admin.csproj" />
   </ItemGroup>
 
 </Project>

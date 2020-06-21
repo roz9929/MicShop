@@ -53,11 +53,11 @@ namespace MicShop.Controllers
         {
             ValidateResult validateResult = _userService.Validate("Email", model.Email, model.Password);
             if (validateResult.Success) { 
-                _userService.SignIn(this.HttpContext, validateResult.User, false);
+                _userService.SignIn(HttpContext, validateResult.User, false);
                 return RedirectToAction("Index", "Shop");
             }
             else
-            return RedirectToAction("Login");
+                return RedirectToAction("Login");
         }
 
         [HttpPost]
@@ -97,7 +97,7 @@ namespace MicShop.Controllers
                 ValidateResult validateResult = _userService.Validate("Email", model.Email, model.Password);
                 if (validateResult.Success)
                 {
-                    await _userService.SignIn(this.HttpContext, validateResult.User, false);
+                    await _userService.SignIn(HttpContext, validateResult.User, false);
                     return RedirectToAction("Index", "Shop");
                 }
             }
@@ -106,7 +106,7 @@ namespace MicShop.Controllers
             ViewData["Categories"] = categories;
             var contact = _contactService.Get();
             ViewData["contact"] = contact;
-            return View("Login");
+            return RedirectToAction("Login");
         }
     }
 }

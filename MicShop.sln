@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicShop.Core", "MicShop.Cor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicShop.Services", "MicShop.Services\MicShop.Services.csproj", "{4ECE85C6-89AC-416C-BDBA-50315847D980}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicShopAdmin", "MicShopAdmin\MicShopAdmin.csproj", "{836104A1-E2C4-4E1D-AF60-B96CA43A8A9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicShop.Admin", "MicShopAdmin\MicShop.Admin.csproj", "{836104A1-E2C4-4E1D-AF60-B96CA43A8A9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicShop", "MicShop\MicShop.csproj", "{88C4A488-6969-4F0A-9F3C-2F05D4C1FA6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicShop", "MicShop\MicShop.csproj", "{88C4A488-6969-4F0A-9F3C-2F05D4C1FA6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

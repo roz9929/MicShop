@@ -45,12 +45,12 @@
                     <div class="product__details__quantity">
                         <div class="quantity">
                             <div class="pro-qty">
-                                <input type="text" value="1">
+                                <input  name="quantitiy" id="quantitiy" type="text" value="1">
                             </div>
                         </div>
                     </div>
-                    <a href="#" class="primary-btn">ADD TO CARD</a>
-                    <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
+                    <a href="#" data-id="@Model.ID" class="basketItem primary-btn">ADD TO CARD</a>
+                    <a href="#" data-id="@Model.ID" class="wishItem heart-icon"><span class="icon_heart_alt"></span></a>
                     <ul>
                         <li><b>Availability</b> <span>In Stock</span></li>
                         <li><b>Shipping</b> <span>01 day shipping. <samp>Free pickup today</samp></span></li>
@@ -178,9 +178,9 @@
                     <div class="product__item">
                         <div class="product__item__pic set-bg" data-setbg="data:image/png;base64,@item.ImageBase64">
                             <ul class="product__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                <li><a data-id="@item.ID" class="wishItem"><i class="fa fa-heart"></i></a></li>
+                                <li><a data-id="@item.ID" class="remove-item remProduct"><i class="fa fa-remove"></i></a></li>
+                                <li><a data-id="@item.ID" class="basketItem"><i class="fa fa-shopping-cart"></i></a></li>
                             </ul>
                         </div>
                         <div class="product__item__text">

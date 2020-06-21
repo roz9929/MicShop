@@ -19,7 +19,7 @@ let BasketListEntity = function () {
 
     _self.Init = function () {
         let _basketlist = localStorage.getItem("basketList");
-        if (_basketlist == null) {
+        if (_basketlist == null || _basketlist == "null" || _basketlist == "") {
             _self.ProductList = []
         }
         else {
@@ -184,16 +184,11 @@ let BasketListEntity = function () {
 
         for (let i in _self.ProductList) {
             let id = _self.ProductList[i].Id;
-            console.log(id);
 
+            let prodTotal = $('#TotalItem\\[' + i + '\\]');
+         
 
-
-            let prodTotal = $(".TotalItem[" + i + "]");
-            console.log(prodTotal);
-          
-
-            let price = parseInt(prodTotal.val());
-            console.log(price);
+            let price = parseInt(prodTotal.text());
             
             totalPrice += price;
         }
