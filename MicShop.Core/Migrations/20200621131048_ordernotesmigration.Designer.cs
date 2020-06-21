@@ -4,14 +4,16 @@ using MicShop.Core.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MicShop.Core.Migrations
 {
     [DbContext(typeof(MicShopContext))]
-    partial class MicShopContextModelSnapshot : ModelSnapshot
+    [Migration("20200621131048_ordernotesmigration")]
+    partial class ordernotesmigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

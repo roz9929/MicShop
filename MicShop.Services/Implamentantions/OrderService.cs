@@ -21,11 +21,12 @@ namespace MicShop.Services.Implamentantions
             _userService = userService;
         }
 
-        public async Task<OrderModel> Create(CartModel cartModel, UserModel currentUser)
+        public async Task<OrderModel> Create(CartModel cartModel, UserModel currentUser, string orderNotes)
         {
             OrderModel ordermodel = new OrderModel();
             ordermodel.Cart = cartModel;
             ordermodel.User = currentUser;
+            ordermodel.OrderNotes = orderNotes;
             _context.Add(ordermodel);
             await _context.SaveChangesAsync();
             return ordermodel;
@@ -41,7 +42,7 @@ namespace MicShop.Services.Implamentantions
         public async Task<OrderModel> GetOrderById(int? id)
         {
             
-                return await _context.Order.FirstOrDefaultAsync(m => m.ID == id);
+                return await _context.Order.Include(user => user.User).Include(cart => cart.Cart).Include(cartItem=> cartItem.Cart.ItemList).FirstOrDefaultAsync(m => m.ID == id);
             
         }
 

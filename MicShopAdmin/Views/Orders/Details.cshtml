@@ -1,18 +1,54 @@
-﻿@model MicShop.Core.Entities.OrderModel
+﻿@model IEnumerable<ProductModel>
 
 @{
     ViewData["Title"] = "Details";
+    var order = ViewData["orderModel"] as OrderModel;
 }
 
 <h1>Details</h1>
 
 <div>
-    <h4>OrderModel</h4>
+    <h4>CategoryModel</h4>
     <hr />
-    <dl class="row">
-    </dl>
+
+    @foreach (var item in Model)
+    {
+<dl class="row">
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(modelitem => item.Name)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(modelitem => item.Name)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(modelitem => item.Price)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(modelitem => item.Price)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(modelitem => item.Sku)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(modelitem => item.Sku)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayName("Quantity")
+    </dt>
+    <dd class="col-sm-10">
+        @(order.Cart.ItemList.Where(id=> id.ProductId==item.ID).Select(id=>id.Quantity).FirstOrDefault())
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(modelitem => item.Image)
+    </dt>
+    <dd class="col-xs-2 col-md-1">
+        <img src="data:image/png;base64,@Html.DisplayFor(modelitem => item.ImageBase64)" class="img-circle img-responsive" alt="" />
+    </dd>
+</dl>
+    }
+
+
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

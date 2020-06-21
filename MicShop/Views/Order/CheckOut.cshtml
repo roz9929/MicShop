@@ -14,15 +14,22 @@
             <form asp-controller="Order" asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="row">
-                    @{await Html.RenderPartialAsync("CheckOutUserDataPartialView");}
+                    <div class="col-lg-8 col-md-6">
+                        @{await Html.RenderPartialAsync("CheckOutUserDataPartialView");}
+                        <div class="checkout__input">
+                            <p>Order notes<span>*</span></p>
+                            <input type="text" name="OrderNotes"
+                                   placeholder="Notes about your order, e.g. special notes for delivery.">
+                        </div>
+                    </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="checkout__order">
                             <h4>Your Order</h4>
                             <div class="checkout__order__products">Products <span>Total</span></div>
                             <ul class="productBody">
                             </ul>
-                            <div class="checkout__order__subtotal">Subtotal <span>$750.99</span></div>
-                            <div class="checkout__order__total">Total <span>$750.99</span></div>
+                            @*<div class="checkout__order__subtotal">Subtotal <span>$750.99</span></div>*@
+                            <div class="checkout__order__total">Total <span class="totalPrice"></span></div>
                             <div class="checkout__input__checkbox">
                                 <label for="acc-or">
                                     Create an account?
@@ -30,7 +37,7 @@
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
-                            <p>
+                            @*<p>
                                 Lorem ipsum dolor sit amet, consectetur adip elit, sed do eiusmod tempor incididunt
                                 ut labore et dolore magna aliqua.
                             </p>
@@ -47,7 +54,7 @@
                                     <input type="checkbox" id="paypal">
                                     <span class="checkmark"></span>
                                 </label>
-                            </div>
+                            </div>*@
                             <button type="submit" class="site-btn">PLACE ORDER</button>
                         </div>
                     </div>
@@ -87,7 +94,7 @@
                         let product = list[i];
                         console.log(product);
                         html += ''
-                            + '<li>' + product.name + '<span>' + product.price + ' </span></li>'
+                            + '<li>' + product.name + '<span class="TotalItem[' + i + ']">' + product.price * baskets.ProductList[i].Quantity + '<i class="dram" >AMD</i> </span> </li>'
                             + '<input type="hidden" value=' + product.id + ' name="ItemList[' + i + '].ProductId">'
                             + '<input type="hidden" value=' + baskets.ProductList[i].Quantity + ' name="ItemList[' + i + '].Quantity">'
                     }

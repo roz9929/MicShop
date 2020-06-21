@@ -20,7 +20,7 @@ namespace MicShop.Controllers
         private readonly IContactService _contactService;
         public OrderController(IOrderService orderService, IContactService contactService, IUserService userService, ICategoryService categoryService)
         {
-            _orderService=orderService;
+            _orderService = orderService;
             _userService = userService;
             _categoryService = categoryService;
             _contactService = contactService;
@@ -29,7 +29,7 @@ namespace MicShop.Controllers
         // GET: Order
         public async Task<IActionResult> Index()
         {
-           var user = _userService.GetCurrentUser(HttpContext);
+            var user = _userService.GetCurrentUser(HttpContext);
             var userOrders = _orderService.GetOrdersByUserId(user.ID);
             var categories = await _categoryService.GetAll();
             ViewData["Categories"] = categories;
@@ -40,15 +40,12 @@ namespace MicShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CartModel cart, RegisterViewModel model )
+        public async Task<IActionResult> Create(CartModel cart, OrderUserViewModel model,string OrderNotes)
         {
             if (ModelState.IsValid)
             {
-                if (string.IsNullOrWhiteSpace(model.Password))
-                    ModelState.AddModelError("", "Password is required");
-                if (model.Password != model.ConfirmPassword)
-                    ModelState.AddModelError("", "Enter the right password");
 
+                
                 var validate = _userService.Validate("Email", model.Email);
                 if (validate.Success)
                 {
@@ -61,10 +58,21 @@ namespace MicShop.Controllers
                 user.Phone = model.Phone;
                 user.Address = model.Address;
                 user.Created = DateTime.Now;
-                _userService.SignUp(user, "email", user.Email, model.Password);
-                _userService.AddToRole(user, "user");
-                await _orderService.Create(cart, user);
+                if (model.CreateAccount == true)
+                {
+                    if (string.IsNullOrWhiteSpace(model.Password))
+                        ModelState.AddModelError("", "Password is required");
+                    if (model.Password != model.ConfirmPassword)
+                        ModelState.AddModelError("", "Enter the right password");
+
+                    _userService.SignUp(user, "email", user.Email, model.Password);
+                    _userService.AddToRole(user, "user");
+
+                }
+                await _orderService.Create(cart, user, OrderNotes);
+
             }
+
             var categories = await _categoryService.GetAll();
             ViewData["Categories"] = categories;
             var contact = _contactService.Get();

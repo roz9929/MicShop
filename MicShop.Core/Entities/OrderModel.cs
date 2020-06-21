@@ -9,5 +9,6 @@ namespace MicShop.Core.Entities
         public int ID { get; set; }
         public UserModel User { get; set; }
         public CartModel Cart { get; set; }
+        public string OrderNotes { get; set; }
     }
 }

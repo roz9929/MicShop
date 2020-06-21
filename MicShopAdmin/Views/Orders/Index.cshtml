@@ -36,7 +36,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Cart.ItemList)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -65,11 +64,11 @@
                     @Html.DisplayFor(modelItem => item.Cart.ID)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Cart.ItemList)
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a>
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                     |
                     <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
                 </td>
             </tr>

@@ -184,14 +184,17 @@ let BasketListEntity = function () {
 
         for (let i in _self.ProductList) {
             let id = _self.ProductList[i].Id;
+            console.log(id);
 
-            let prodNumElem = $("#basketProductNum" + id);
-            let num = prodNumElem.val();
-            num = parseInt(num);
 
-            let price = parseInt($('#basketProductPrice' + id).val());
 
-            price = price * num;
+            let prodTotal = $(".TotalItem[" + i + "]");
+            console.log(prodTotal);
+          
+
+            let price = parseInt(prodTotal.val());
+            console.log(price);
+            
             totalPrice += price;
         }
 
