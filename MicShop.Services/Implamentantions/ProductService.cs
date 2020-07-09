@@ -15,6 +15,7 @@ namespace MicShop.Services.Implamentantions
     {
         private readonly MicShopContext _context;
         private readonly ICategoryService _categoryService;
+       
 
         public ProductService(MicShopContext context, ICategoryService categoryService)
         {
@@ -39,17 +40,13 @@ namespace MicShop.Services.Implamentantions
 
         public async Task<ProductModel> Edit(int id, ProductModel productModel)
         {
-            _context.Product.Attach(productModel);
-            if (productModel.ImageBase64 != null)
-            {
-                _context.Entry(productModel).Property(x => x.ImageBase64).IsModified = true;
-            }
-            else
+            _context.Entry(productModel).State = EntityState.Modified;
+
+            if (productModel.ImageBase64 == null)
             {
                 _context.Entry(productModel).Property(x => x.ImageBase64).IsModified = false;
             }
-         
-
+  
             await _context.SaveChangesAsync();
             return productModel;
         }
@@ -60,9 +57,17 @@ namespace MicShop.Services.Implamentantions
                 .FirstOrDefaultAsync(m => m.ID == id);
         }
 
-         public async Task<List<ProductModel>> GetAll()
+        public async Task<int> GetCount()
         {
-            return await _context.Product.Include(category => category.Category).ToListAsync();
+            IQueryable<ProductModel> source = _context.Product.Include(category => category.Category);
+            var count = await source.CountAsync();
+            return count;
+        }
+         public async Task<List<ProductModel>> GetAll(int page,int pageSize)
+        {
+            IQueryable<ProductModel> source = _context.Product.Include(category => category.Category);
+            var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            return items;
         }
 
         public  bool ProductModelExists(int id)
@@ -70,18 +75,18 @@ namespace MicShop.Services.Implamentantions
            return  _context.Product.Any(e => e.ID == id);
         }
 
-        public async Task<List<ProductModel>> GetProductsByCategory(int? id)
+        public async Task<List<ProductModel>> GetProductsByCategory(int? id, int page=1)
         {
             List<ProductModel> categoryProducts = new List<ProductModel>();
-            categoryProducts = await _categoryService.GetCategoryProducts(id);
+            categoryProducts = await _categoryService.GetCategoryProducts(id,page,3);
             return categoryProducts;
 
         }
 
-        public async Task<List<ProductModel>> GetLastProducts(int? id)
+        public async Task<List<ProductModel>> GetLastProducts(int? id,int page=1)
         {
             List<ProductModel> categoryProducts = new List<ProductModel>();
-            categoryProducts = await _categoryService.GetCategoryProducts(id);
+            categoryProducts = await _categoryService.GetCategoryProducts(id,page,3);
             List<ProductModel> lastProducts = new List<ProductModel>();
             lastProducts = categoryProducts.OrderBy(x => x.Created).ToList();
             if (lastProducts.Count > 9)
@@ -95,6 +100,14 @@ namespace MicShop.Services.Implamentantions
         {
             var prodList= await _context.Product.ToListAsync();
             return  prodList.Where(x=>IdList.Contains(x.ID)).ToList();
+        }
+
+        public async Task<List<ProductModel>> Search(string searchString)
+        {
+
+            var products = await _context.Product.Include(category => category.Category).ToListAsync();
+            var searchProducts = products.Where(s => s.Name.ToLower().Contains(searchString.ToLower())).ToList();
+            return searchProducts;
         }
     }
 }

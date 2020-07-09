@@ -13,6 +13,7 @@ namespace MicShop.Services.Implamentantions
     internal class CategoryService : ICategoryService
     {
         private readonly MicShopContext _context;
+      
         public CategoryService(MicShopContext context)
         {
             _context = context;
@@ -76,12 +77,20 @@ namespace MicShop.Services.Implamentantions
         {
             return await _context.Category.ToListAsync();
         }
-
-        public async Task<List<ProductModel>> GetCategoryProducts(int? id)
+        public async Task<int> GetCategoryProductsCount(int? id)
         {
-            var categoryModel = await _context.Category.Include(c => c.Products).FirstOrDefaultAsync(m => m.ID == id);
-            List<ProductModel> productList = categoryModel.Products.ToList();
-            return productList;
+            IQueryable<ProductModel> source = _context.Product.Include(e => e.Category).Where(c => c.Category.ID == id);
+            var count = await source.CountAsync();
+            return count;
+        }
+
+
+        public async Task<List<ProductModel>> GetCategoryProducts(int? id,int page,int pageSize=3)
+        {
+            IQueryable<ProductModel> source = _context.Product.Include(e=> e.Category).Where(c => c.Category.ID == id);
+            var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        
+            return items;
         }
     }
 }

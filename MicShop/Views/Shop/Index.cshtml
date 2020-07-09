@@ -1,4 +1,5 @@
-﻿@model IEnumerable<MicShop.Core.Entities.CategoryModel>
+﻿@using MicShop.Models
+@model ProductViewModel
 
 @{
     ViewData["Title"] = "Home Page";
@@ -22,7 +23,7 @@
 
                     <div class="col-lg-3">
                         <div class="categories__item set-bg" data-setbg="data:image/png;base64,@item.ImageBase64">
-                            <h5><a asp-action="GetCategoryProducts" asp-route-id="@item.ID"asp-controller="Category">@item.Name</a></h5>
+                            <h5><a asp-action="GetCategoryProducts" asp-route-id="@item.ID" asp-controller="Category">@item.Name</a></h5>
                         </div>
                     </div>
 
@@ -45,7 +46,7 @@
         </div>
         <div class="row featured__filter">
 
-            @foreach (var item in ViewData["Products"] as IEnumerable<MicShop.Core.Entities.ProductModel>)
+            @foreach (var item in Model.Products)
             {
 
                 <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
@@ -58,7 +59,7 @@
                             </ul>
                         </div>
                         <div class="featured__item__text">
-                            <h6><a  asp-controller="Product" asp-action="OneProductById" asp-route-id="@item.ID">@item.Name</a></h6>
+                            <h6><a asp-controller="Product" asp-action="OneProductById" asp-route-id="@item.ID">@item.Name</a></h6>
                             <h5>@item.Price Դր</h5>
                         </div>
                     </div>

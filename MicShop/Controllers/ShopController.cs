@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
+using MicShop.Core.Entities;
 using MicShop.Models;
 using MicShop.Services.Interfaces;
 
@@ -29,15 +30,26 @@ namespace MicShop.Controllers
             _contactService = contactService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             var categories = await _categoryService.GetAll();
-            var products = await _productService.GetAll();
+            var count = await _productService.GetCount();
+            var products = await _productService.GetAll(page,12);
+            
+
+            PageViewModel pageViewModel = new PageViewModel(count, page, 12);
+            ProductViewModel viewModel = new ProductViewModel
+            {
+                PageViewModel = pageViewModel,
+                Products = products
+            };
+            
+            //var products = await _productService.GetAll();
             ViewData["Categories"] = categories;
-            ViewData["Products"] = products;
+            ViewData["Categories"] = categories;
             var contact = _contactService.Get();
             ViewData["contact"] = contact;
-            return View();
+            return View(viewModel);
         }
 
         public IActionResult Privacy()
@@ -69,6 +81,49 @@ namespace MicShop.Controllers
             var contact = _contactService.Get();
             ViewData["contact"] = contact;
             return View();
+        }
+        public async Task<IActionResult> Search(string searchString, int page= 1,string sortOrder = "")
+        {
+            ViewData["searchString"] = searchString;
+            Random rnd = new Random();
+            List<ProductModel> searchProducts = new List<ProductModel>();
+            
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                searchProducts = await _productService.Search(searchString);
+            }
+            switch (sortOrder)
+            {
+                case "price_desc":
+                    searchProducts = searchProducts.OrderByDescending(s => s.Price).ToList();
+
+                    break;
+                case "price_asc":
+                    searchProducts = searchProducts.OrderBy(s => s.Price).ToList();
+                    break;
+
+                default:
+                    searchProducts = searchProducts.OrderBy(s => s.ID).ToList();
+                    break;
+            }
+
+            if (searchProducts == null)
+            {
+                return NotFound();
+            }
+            PageViewModel pageViewModel = new PageViewModel(searchProducts.Count, page, 12);
+            ProductViewModel viewModel = new ProductViewModel
+            {
+                PageViewModel = pageViewModel,
+                Products = searchProducts.Skip((page - 1) * 12).Take(12),
+            };
+            var lastProducts = await _productService.GetLastProducts(searchProducts[0].Category.ID, page);
+            var categories = await _categoryService.GetAll();
+            ViewData["Categories"] = categories;
+            var contact = _contactService.Get();
+            ViewData["contact"] = contact;
+            ViewData["lastProducts"] = lastProducts;
+            return View("SearchResoultView",viewModel);
         }
     }
 }

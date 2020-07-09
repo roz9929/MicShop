@@ -10,5 +10,7 @@ namespace MicShop.Core.Entities
         public UserModel User { get; set; }
         public CartModel Cart { get; set; }
         public string OrderNotes { get; set; }
+        public DateTime CreationDate { get; set; }
+        //public ReviewModel review { get; set; }
     }
 }

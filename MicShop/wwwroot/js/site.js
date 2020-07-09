@@ -45,6 +45,23 @@ let BasketListEntity = function () {
         });
     }
 
+    _self.AddMany = function (productList) {
+        for (var j in productList) {
+            for (var i in _self.ProductList) {
+                let curentProduct = _self.ProductList[i];
+                if (productList[j].Id === curentProduct.Id) {
+                    return false;
+                }
+            }
+            productList[j].Quantity = 1;
+            _self.ProductList.push(productList[j]);
+        }
+
+
+
+        Save();
+    }
+
     _self.Add = function (Product) {
         for (var i in _self.ProductList) {
             let curentProduct = _self.ProductList[i];
@@ -213,7 +230,7 @@ var WishListEntity = function () {
 
     _self.Init = function () {
         let _wishlist = localStorage.getItem("wishList");
-        if (_wishlist == null) {
+        if (_wishlist == null || _wishlist == "null" || _wishlist == "") {
             _self.ProductList = []
         }
         else {
@@ -236,11 +253,13 @@ var WishListEntity = function () {
                 return false;
             }
         }
-
+        Product.Quantity = 1;
         _self.ProductList.push(Product);
 
         Save();
     }
+
+    
 
     _self.Remove = function (id) {
 
@@ -365,6 +384,7 @@ $(document).ready(function () {
 
     $(".wishItem").unbind().bind('click', function (e) {
         let Product = new ProductEntity();
+        Product.Quantity = 1;
         Product.Id = $(this).data('id');
 
         wishes.Add(Product);

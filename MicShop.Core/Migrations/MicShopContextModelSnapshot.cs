@@ -167,6 +167,24 @@ namespace MicShop.Core.Migrations
                     b.ToTable("CredentialTypes");
                 });
 
+            modelBuilder.Entity("MicShop.Core.Entities.MenuItemsModel", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("MenuItems");
+                });
+
             modelBuilder.Entity("MicShop.Core.Entities.OrderModel", b =>
                 {
                     b.Property<int>("ID")
@@ -176,6 +194,9 @@ namespace MicShop.Core.Migrations
 
                     b.Property<int?>("CartID")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OrderNotes")
                         .HasColumnType("nvarchar(max)");
@@ -230,8 +251,9 @@ namespace MicShop.Core.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Details")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(255)")
+                        .HasMaxLength(255);
 
                     b.Property<string>("ImageBase64")
                         .HasColumnType("nvarchar(max)");

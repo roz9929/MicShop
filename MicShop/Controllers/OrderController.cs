@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +19,14 @@ namespace MicShop.Controllers
         private readonly IUserService _userService;
         private readonly ICategoryService _categoryService;
         private readonly IContactService _contactService;
-        public OrderController(IOrderService orderService, IContactService contactService, IUserService userService, ICategoryService categoryService)
+        private readonly IProductService _productService;
+        public OrderController(IOrderService orderService, IProductService productService, IContactService contactService, IUserService userService, ICategoryService categoryService)
         {
             _orderService = orderService;
             _userService = userService;
             _categoryService = categoryService;
             _contactService = contactService;
+            _productService = productService;
         }
 
         // GET: Order
@@ -43,6 +46,7 @@ namespace MicShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAuth(CartModel cart, string OrderNotes)
         {
+            DoneModelView done = new DoneModelView();
             if (ModelState.IsValid)
             {
 
@@ -52,21 +56,24 @@ namespace MicShop.Controllers
                 }
 
                 UserModel user = _userService.GetCurrentUser(HttpContext);
-                await _orderService.Create(cart, user, OrderNotes);
-
+                var order = await _orderService.Create(cart, user, OrderNotes);
+                var products = await _productService.GetProductsByIdList(order.Cart.ItemList.Select(id => id.ProductId).ToList());
+                done.order = order;
+                done.products = products;
             }
 
             var categories = await _categoryService.GetAll();
             ViewData["Categories"] = categories;
             var contact = _contactService.Get();
             ViewData["contact"] = contact;
-            return View("Done");
+            return View("Done",done);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CartModel cart, OrderUserViewModel model,string OrderNotes)
         {
+            DoneModelView done = new DoneModelView();
             if (ModelState.IsValid)
             {
 
@@ -94,15 +101,18 @@ namespace MicShop.Controllers
                     _userService.AddToRole(user, "user");
 
                 }
-                await _orderService.Create(cart, user, OrderNotes);
 
+                var order=await _orderService.Create(cart, user, OrderNotes);
+                var products = await _productService.GetProductsByIdList(order.Cart.ItemList.Select(id => id.ProductId).ToList());
+                done.order = order;
+                done.products = products;
             }
 
             var categories = await _categoryService.GetAll();
             ViewData["Categories"] = categories;
             var contact = _contactService.Get();
             ViewData["contact"] = contact;
-            return View("Done");
+            return View("Done",done);
         }
         public async Task<IActionResult> CheckOut()
         {
@@ -112,23 +122,7 @@ namespace MicShop.Controllers
             ViewData["contact"] = contact;
             return View();
         }
-        //// GET: Order/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var orderModel = await _context.Order
-        //        .FirstOrDefaultAsync(m => m.ID == id);
-        //    if (orderModel == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(orderModel);
-        //}
+        
 
         //// GET: Order/Create
         //public IActionResult Create()

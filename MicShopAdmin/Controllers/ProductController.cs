@@ -26,8 +26,8 @@ namespace MicShop.Controllers
         // GET: Product
         public async Task<IActionResult> Index()
         {
-
-            return View(await _productService.GetAll() );
+            var count = await _productService.GetCount();
+            return View(await _productService.GetAll(1, count));
         }
 
         // GET: Product/Details/5
@@ -103,7 +103,7 @@ namespace MicShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Price,OldPrice,Sku,Image,Category")] ProductModel productModel)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Price,OldPrice,Sku,Image,Category,Description")] ProductModel productModel)
         {
             if (id != productModel.ID)
             {

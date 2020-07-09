@@ -20,6 +20,7 @@ namespace MicShop.Services.Enjections
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IMenuItemsService, MenuItemsService>();
         }
     }
 }

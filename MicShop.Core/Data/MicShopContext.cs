@@ -99,6 +99,7 @@ namespace MicShop.Core.Data
         public DbSet<CartModel> Cart { get; set; }
 
         public DbSet<OrderModel> Order { get; set; }
+        public DbSet<MenuItemsModel> MenuItems { get; set; }
     }
 
 }

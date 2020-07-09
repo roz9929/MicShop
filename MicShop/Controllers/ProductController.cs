@@ -25,11 +25,11 @@ namespace MicShop.Controllers
         }
 
         // GET: Product
-        public async Task<IActionResult> OneProductById(int? id)
+        public async Task<IActionResult> OneProductById(int? id,int page=1)
         {
             var categories = await _categoryService.GetAll();
             var model = await _productService.Get(id);
-            var products = await _categoryService.GetCategoryProducts(model.Category.ID);
+            var products = await _categoryService.GetCategoryProducts(model.Category.ID,page,3);
             ViewData["Categories"] = categories;
             ViewData["Products"] = products;
             var contact =  _contactService.Get();

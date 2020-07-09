@@ -23,10 +23,15 @@ namespace MicShop.Core.Entities
         [Required]
         public CategoryModel Category { get; set; }
         public string ImageBase64 { get; set; }
-        
-        public string Details { get; set; }
         [NotMapped]
         public IFormFile Image { get; set; }
         public DateTime Created { get; set; }
+
+        [StringLength(255, MinimumLength = 0)]
+        [DataType(DataType.MultilineText)]
+        public string Description { get; set; }
+
+        //[NotMapped]
+        //public List<ReviewModel> Reviews { get; set; }
     }
 }

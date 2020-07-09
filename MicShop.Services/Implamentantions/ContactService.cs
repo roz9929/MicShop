@@ -52,8 +52,8 @@ namespace MicShop.Services.Implamentantions
 
         public ContactModel Get()
         {
-            var categories = _context.Contact.ToList();
-            return  categories.LastOrDefault();
+            var contact = _context.Contact.ToList();
+            return  contact.LastOrDefault();
         }
 
         public async Task<List<ContactModel>> GetAll()

@@ -1,14 +1,21 @@
 ﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - MicShop</title>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/kdzfybmythrn72dl23t5n926hkoo18q5vez8t4z8jiiai55h/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <link href="https://cdn.quilljs.com/1.2.6/quill.snow.css" rel="stylesheet">
+    
+    <script src="https://cdn.quilljs.com/1.2.6/quill.min.js"></script>
+
 </head>
 <body>
     <header>
@@ -36,8 +43,11 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="ContactAdmin" asp-action="Index">Contact</a>
                         </li>
                         <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a>
-                            </li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Page" asp-action="AdminIndex">Manu Items</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -54,6 +64,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>

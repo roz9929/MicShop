@@ -27,6 +27,7 @@ namespace MicShop.Services.Implamentantions
             ordermodel.Cart = cartModel;
             ordermodel.User = currentUser;
             ordermodel.OrderNotes = orderNotes;
+            ordermodel.CreationDate = DateTime.Now;
             _context.Add(ordermodel);
             await _context.SaveChangesAsync();
             return ordermodel;
@@ -49,7 +50,7 @@ namespace MicShop.Services.Implamentantions
         public async Task<List<OrderModel>> GetOrdersByUserId(int id)
         {
 
-            return await _context.Order.Where(s => s.ID == id).ToListAsync();
+            return await _context.Order.Include(user => user.User).Include(cart => cart.Cart).Include(cartItem => cartItem.Cart.ItemList).Where(s => s.User.ID == id).ToListAsync();
         }
 
     }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MicShop.Core.Data;
 using MicShop.Core.Entities;
+using MicShop.Models;
 using MicShop.Services.Interfaces;
 
 namespace MicShop.Controllers
@@ -36,31 +37,54 @@ namespace MicShop.Controllers
         }
 
    
-        public async Task<IActionResult> GetCategoryProducts(int? id)
+        public async Task<IActionResult> GetCategoryProducts(int? id,int page=1,string sortOrder="")
         {
             if (id == null)
             {
                 return NotFound();
             }
-
-            var categoryProducts = await _categoryService.GetCategoryProducts(id);
+             var categoryProducts = await _categoryService.GetCategoryProducts(id,page,18);
+            switch (sortOrder)
+            {
+                case "price_desc":
+                    categoryProducts = categoryProducts.OrderByDescending(s => s.Price).ToList();
+                    
+                    break;
+                case "price_asc":
+                    categoryProducts = categoryProducts.OrderBy(s => s.Price).ToList();
+                    break;
+               
+                default:
+                    categoryProducts = categoryProducts.OrderBy(s => s.ID).ToList();
+                    break;
+            }
+           
             if (categoryProducts == null)
             {
                 return NotFound();
             }
+            var count = await _categoryService.GetCategoryProductsCount(id);
+
+            PageViewModel pageViewModel = new PageViewModel(count, page, 12);
+            ProductViewModel viewModel = new ProductViewModel
+            {
+                PageViewModel = pageViewModel,
+                Products = categoryProducts
+            };
             var categories = await _categoryService.GetAll();
-            var lastProducts = await _productService.GetLastProducts(id);
+            var lastProducts = await _productService.GetLastProducts(id,page);
             //var products = await _productService.GetAll();
             ViewData["Categories"] = categories;
             ViewData["lastProducts"] = lastProducts;
-            var products = await _productService.GetAll();
             ViewData["Categories"] = categories;
-            ViewData["Products"] = products;
+            
             var contact = _contactService.Get();
             ViewData["contact"] = contact;
             //ViewData["Products"] = products;
-            return View("CategoryProducts", categoryProducts);
+            return View("CategoryProducts", viewModel);
         }
+
+
 
     }
 }

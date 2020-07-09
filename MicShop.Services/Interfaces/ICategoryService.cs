@@ -14,7 +14,8 @@ namespace MicShop.Services.Interfaces
         Task<CategoryModel> Create(CategoryModel categoryModel);
         Task<CategoryModel> Edit(int id, CategoryModel categoryModel);
         Task<int> Delete(int? id);
-        Task<List<ProductModel>> GetCategoryProducts(int? id);
+        Task<List<ProductModel>> GetCategoryProducts(int? id,int page, int pageSize);
+        Task<int> GetCategoryProductsCount(int? id);
 
     }
 }

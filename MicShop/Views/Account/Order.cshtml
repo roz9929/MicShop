@@ -1,0 +1,57 @@
+﻿@model UserOrderDetailsViewModel
+@{
+    ViewData["Title"] = "Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    double totalPrice = 0;
+    foreach (var item in Model.products)
+    {
+        totalPrice += item.Price * Model.order.Cart.ItemList.Where(id => id.ProductId == item.ID).Select(id => id.Quantity).FirstOrDefault();
+    }
+
+}
+
+    <div class="container mt-5 mb-5">
+        <div class="d-flex justify-content-center row">
+            <div class="col-md-10">
+                <div class="receipt bg-white p-3 rounded">
+                    <hr>
+                    <div class="d-flex flex-row justify-content-between align-items-center order-details">
+                        <div><span class="d-block fs-12">Order date</span><span class="font-weight-bold">@Model.order.CreationDate</span></div>
+                        <div><span class="d-block fs-12">Order number</span><span class="font-weight-bold">@Model.order.ID</span></div>
+                        <div><span class="d-block fs-12">Payment method</span><span class="font-weight-bold">Cash</span></div>
+                        <div><span class="d-block fs-12">Shipping Address</span><span class="font-weight-bold text-success">@Model.order.User.Address</span></div>
+                    </div>
+                    <hr>
+                    @foreach (var item in Model.products)
+                    {
+                        <div class="d-flex justify-content-between align-items-center product-details">
+                            <div class="d-flex flex-row product-name-image">
+                                <img class="rounded" src="data:image/png;base64, @item.ImageBase64" width="80">
+                                <div class="d-flex flex-column justify-content-between ml-2">
+                                    <div><span class="d-block font-weight-bold p-name">@item.Name</span><span class="fs-12">@item.Category.Name</span></div><span class="fs-12">Quantity: @Model.order.Cart.ItemList.Where(id => id.ProductId == item.ID).Select(id => id.Quantity).FirstOrDefault() pcs</span>
+                                </div>
+                            </div>
+                            <div class="product-price">
+                                <h5>@item.Price</h5>
+                            </div>
+                        </div>
+                    }
+                    <div class="mt-5 amount row">
+                        <div class="d-flex justify-content-center col-md-6"></div>
+                        <div class="col-md-6">
+                            <div class="billing">
+                                <div class="d-flex justify-content-between"><span>Subtotal</span><span class="font-weight-bold">@totalPrice</span></div>
+                                <div class="d-flex justify-content-between mt-2"><span>Shipping fee</span><span class="font-weight-bold">0</span></div>
+                                <div class="d-flex justify-content-between mt-2"><span>Tax</span><span class="font-weight-bold">0</span></div>
+                                <div class="d-flex justify-content-between mt-2"><span class="text-success">Discount</span><span class="font-weight-bold text-success">0</span></div>
+                                <hr>
+                                <div class="d-flex justify-content-between mt-1"><span class="font-weight-bold">Total</span><span class="font-weight-bold text-success">@totalPrice</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </div>
+        <a asp-action="Orders">Back to Order List</a>
+    </div>  

@@ -21,12 +21,14 @@ namespace MicShop.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
         private readonly IContactService _contactService;
-        public AccountController(IUserService userService, IContactService contactService, ICategoryService categoryService, IProductService productService)
+        private readonly IOrderService _orderService;
+        public AccountController(IUserService userService, IOrderService orderService, IContactService contactService, ICategoryService categoryService, IProductService productService)
         {
             _userService=userService;
             _categoryService = categoryService;
             _productService = productService;
             _contactService = contactService;
+            _orderService = orderService;
         }
 
 
@@ -39,7 +41,7 @@ namespace MicShop.Controllers
                 return RedirectToAction("Index", "Shop");
             }
             var categories = await _categoryService.GetAll();
-            var products = await _productService.GetAll();
+            //var products = await _productService.GetAll();
             var contact = _contactService.Get();
             ViewData["contact"] = contact;
             ViewData["Categories"] = categories;
@@ -60,7 +62,7 @@ namespace MicShop.Controllers
                 return RedirectToAction("Login");
         }
 
-        [HttpPost]
+        [HttpGet]
         [AllowAnonymous]
         public IActionResult Logout()
         {
@@ -102,11 +104,45 @@ namespace MicShop.Controllers
                 }
             }
             var categories = await _categoryService.GetAll();
-            var products = await _productService.GetAll();
+            //var products = await _productService.GetAll();
             ViewData["Categories"] = categories;
             var contact = _contactService.Get();
             ViewData["contact"] = contact;
             return RedirectToAction("Login");
+        }
+
+        
+        // GET: AccountOrders
+        public async Task<IActionResult> Orders()
+        {
+            UserModel user = _userService.GetCurrentUser(HttpContext);
+            List<OrderModel> orderList = await _orderService.GetOrdersByUserId(user.ID);
+            var contact = _contactService.Get();
+            ViewData["contact"] = contact;
+            var categories = await _categoryService.GetAll();
+            ViewData["Categories"] = categories;
+            return View(orderList);
+        }
+
+        // GET: AccountOrders
+        public async Task<IActionResult> Order(int id)
+        {
+            UserModel user = _userService.GetCurrentUser(HttpContext);
+            OrderModel order = await _orderService.GetOrderById(id);
+            
+            if (order.User.ID != user.ID)
+            {
+                return RedirectToAction("Orders");
+            }
+            var products = await _productService.GetProductsByIdList(order.Cart.ItemList.Select(id => id.ProductId).ToList());
+            UserOrderDetailsViewModel userOrderDetailsViewModel = new UserOrderDetailsViewModel();
+            userOrderDetailsViewModel.order = order;
+            userOrderDetailsViewModel.products = products;
+            var contact = _contactService.Get();
+            ViewData["contact"] = contact;
+            var categories = await _categoryService.GetAll();
+            ViewData["Categories"] = categories;
+            return View(userOrderDetailsViewModel);
         }
     }
 }

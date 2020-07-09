@@ -1,0 +1,246 @@
+﻿@using MicShop.Models
+@model ProductViewModel
+@{
+    ViewData["Title"] = "SearchResoultView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Product Section Begin -->
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-5">
+                <div class="sidebar">
+                    <div class="sidebar__item">
+                        <h4>Categories</h4>
+                        <ul>
+
+                            @foreach (var item in ViewData["Categories"] as IEnumerable<MicShop.Core.Entities.CategoryModel>)
+                            {
+                                <li><a asp-action="GetCategoryProducts" asp-route-id="@item.ID" asp-controller="Category">@item.Name</a></li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="sidebar__item">
+                        <h4>Price</h4>
+                        <div class="price-range-wrap">
+                            <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
+                                 data-min="10" data-max="540">
+                                <div class="ui-slider-range ui-corner-all ui-widget-header"></div>
+                                <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
+                                <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
+                            </div>
+                            <div class="range-slider">
+                                <div class="price-input">
+                                    <input type="text" id="minamount">
+                                    <input type="text" id="maxamount">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sidebar__item sidebar__item__color--option">
+                        <h4>Colors</h4>
+                        <div class="sidebar__item__color sidebar__item__color--white">
+                            <label for="white">
+                                White
+                                <input type="radio" id="white">
+                            </label>
+                        </div>
+                        <div class="sidebar__item__color sidebar__item__color--gray">
+                            <label for="gray">
+                                Gray
+                                <input type="radio" id="gray">
+                            </label>
+                        </div>
+                        <div class="sidebar__item__color sidebar__item__color--red">
+                            <label for="red">
+                                Red
+                                <input type="radio" id="red">
+                            </label>
+                        </div>
+                        <div class="sidebar__item__color sidebar__item__color--black">
+                            <label for="black">
+                                Black
+                                <input type="radio" id="black">
+                            </label>
+                        </div>
+                        <div class="sidebar__item__color sidebar__item__color--blue">
+                            <label for="blue">
+                                Blue
+                                <input type="radio" id="blue">
+                            </label>
+                        </div>
+                        <div class="sidebar__item__color sidebar__item__color--green">
+                            <label for="green">
+                                Green
+                                <input type="radio" id="green">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="sidebar__item">
+                        <h4>Popular Size</h4>
+                        <div class="sidebar__item__size">
+                            <label for="large">
+                                Large
+                                <input type="radio" id="large">
+                            </label>
+                        </div>
+                        <div class="sidebar__item__size">
+                            <label for="medium">
+                                Medium
+                                <input type="radio" id="medium">
+                            </label>
+                        </div>
+                        <div class="sidebar__item__size">
+                            <label for="small">
+                                Small
+                                <input type="radio" id="small">
+                            </label>
+                        </div>
+                        <div class="sidebar__item__size">
+                            <label for="tiny">
+                                Tiny
+                                <input type="radio" id="tiny">
+                            </label>
+                        </div>
+                    </div>
+                    @{var lastProducts = ViewData["lastProducts"] as IEnumerable<MicShop.Core.Entities.ProductModel>;
+                        List<MicShop.Core.Entities.ProductModel> lastProductList = lastProducts.ToList();
+                    }
+                    <div class="sidebar__item">
+                        <div class="latest-product__text">
+                            <h4>Latest Products</h4>
+                            <div class="latest-product__slider owl-carousel">
+                                @for (var i = 0; i < lastProductList.Count; i += 3)
+                                {
+                                    <div class="latest-prdouct__slider__item">
+                                        @{ if (lastProductList.ElementAtOrDefault(i) != null)
+                                            {
+                                                <a asp-controller="Product" asp-action="OneProductById" asp-route-id="@lastProductList[i].ID" class="latest-product__item">
+                                                    <div class="latest-product__item__pic">
+                                                        <img style="width:110px;height:110px;" src="data:image/png;base64, @lastProductList[i].ImageBase64" alt="">
+                                                    </div>
+                                                    <div class="latest-product__item__text">
+                                                        <h6>@lastProductList[i].Name</h6>
+                                                        <span>@lastProductList[i].Price ԴՐ</span>
+                                                    </div>
+                                                </a>
+                                            }
+                                        }
+                                        @{ if (lastProductList.ElementAtOrDefault(i + 1) != null)
+                                            {
+                                                <a asp-controller="Product" asp-action="OneProductById" asp-route-id="@lastProductList[i+1].ID" class="latest-product__item">
+                                                    <div class="latest-product__item__pic">
+                                                        <img style="width:110px;height:110px;" src="data:image/png;base64, @lastProductList[i + 1].ImageBase64" alt="">
+                                                    </div>
+                                                    <div class="latest-product__item__text">
+                                                        <h6>@lastProductList[i + 1].Name</h6>
+                                                        <span>@lastProductList[i + 1].Price ԴՐ</span>
+                                                    </div>
+                                                </a>
+                                            }
+                                        }
+                                        @{ if (lastProductList.ElementAtOrDefault(i + 2) != null)
+                                            {
+                                                <a asp-controller="Product" asp-action="OneProductById" asp-route-id="@lastProductList[i+2].ID" class="latest-product__item">
+                                                    <div class="latest-product__item__pic">
+                                                        <img style="width:110px;height:110px;" src="data:image/png;base64, @lastProductList[i + 2].ImageBase64" alt="">
+                                                    </div>
+                                                    <div class="latest-product__item__text">
+                                                        <h6>@lastProductList[i + 2].Name</h6>
+                                                        <span>@lastProductList[i + 2].Price ԴՐ</span>
+                                                    </div>
+                                                </a>
+                                            }
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-7">
+
+                <div class="filter__item">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-5">
+                            <div class="filter__sort">
+                                <div class="header__top__right__language">
+
+                                    <div>Sort by</div>
+                                    <span class="arrow_carrot-down"></span>
+                                    <ul>
+                                        <li><a asp-action="Search" asp-controller="Shop" asp-route-searchString="@ViewData["searchString"]" asp-route-sortOrder="price_desc"><i class="fa fa-sort"></i> Price desc</a></li>
+                                        <li><a asp-action="Search" asp-controller="Shop" asp-route-searchString="@ViewData["searchString"]" asp-route-sortOrder="price_asc"><i class="fa fa-sort"></i> Price asc</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4">
+                            <div class="filter__found">
+                                <h6><span>@Model.Products.Count()</span> Products found</h6>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-3">
+                            <div class="filter__option">
+                                <span class="icon_grid-2x2"></span>
+                                <span class="icon_ul"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    @foreach (var item in Model.Products)
+                    {
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" data-setbg="data:image/png;base64,@item.ImageBase64">
+                                    <ul class="product__item__pic__hover">
+                                        <li><a class="wishItem" data-id="@item.ID"><i class="fa fa-heart"></i></a></li>
+                                        <li><a class="remove-item remProduct" data-id="@item.ID"><i class="fa fa-remove"></i></a></li>
+                                        <li><a class="basketItem" data-id="@item.ID"><i class="fa fa-shopping-cart"></i></a></li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6><a asp-controller="Product" asp-action="OneProductById" asp-route-id="@item.ID">@item.Name</a></h6>
+                                    <h5>@item.Price AMD</h5>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+
+                <div class="product__pagination">
+
+                    @if (Model.PageViewModel.HasPreviousPage)
+                    {
+                        <a asp-action="Search"
+                           asp-route-searchString="@ViewData["searchString"]",
+                           asp-route-page="@(Model.PageViewModel._pageNumber - 1)"
+                           class="btn btn-outline-dark">
+                            <i class="fa fa-long-arrow-left"></i>
+                        </a>
+                    }
+                    <a asp-action="Search"
+                       asp-route-searchString="@ViewData["searchString"]",
+                       asp-route-page="@(Model.PageViewModel._pageNumber)">
+                        @(Model.PageViewModel._pageNumber)
+                    </a>
+                    @if (Model.PageViewModel.HasNextPage)
+                    {
+                        <a asp-action="Search"
+                           asp-route-searchString="@ViewData["searchString"]",
+                           asp-route-page="@(Model.PageViewModel._pageNumber + 1)"
+                           class="btn btn-outline-dark">
+
+                            <i class="fa fa-long-arrow-right"></i>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Product Section End -->
