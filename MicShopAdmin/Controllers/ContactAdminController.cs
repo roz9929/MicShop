@@ -28,21 +28,20 @@ namespace MicShopAdmin.Controllers
         }
 
         // GET: ContactAdmin/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    var contactModel = await _context.Contact
-        //        .FirstOrDefaultAsync(m => m.ID == id);
-        //    if (contactModel == null)
-        //    {
-        //        return NotFound();
-        //    }
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var contactModel = await _contactService.GetById(id);
+            if (contactModel == null)
+            {
+                return NotFound();
+            }
 
-        //    return View(contactModel);
-        //}
+            return View(contactModel);
+        }
 
         // GET: ContactAdmin/Create
         public IActionResult Create()
@@ -55,7 +54,7 @@ namespace MicShopAdmin.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ContactModel contactModel)
+        public async Task<IActionResult> Create([Bind("Phone", "Address", "Email", "OpenFrom", "OpenTo", "FaceBook", "Instagram", "Twitter")]ContactModel contactModel)
         {
             if (ModelState.IsValid)
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,15 +13,18 @@ using MicShop.Services.Interfaces;
 
 namespace MicShop.Controllers
 {
-  
+
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
-        public ProductController(IProductService productService, ICategoryService categoryService)
+        private readonly IHostingEnvironment _env;
+
+        public ProductController(IHostingEnvironment env, IProductService productService, ICategoryService categoryService)
         {
             _productService = productService;
             _categoryService = categoryService;
+            _env = env;
         }
 
         // GET: Product
@@ -48,9 +52,9 @@ namespace MicShop.Controllers
         }
 
         // GET: Product/Create
-       async public Task<IActionResult> Create()
+        async public Task<IActionResult> Create()
         {
-            var categories =await _categoryService.GetAll();
+            var categories = await _categoryService.GetAll();
             ViewBag.Categories = new SelectList(categories, "ID", "Name");
             return View();
         }
@@ -60,7 +64,7 @@ namespace MicShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductModel productModel)
+        public async Task<IActionResult> Create([Bind("Name", "Price", "OldPrice", "Sku", "Description", "Image", "Category")] ProductModel productModel)
         {
             if (productModel.Image == null)
             {
@@ -71,11 +75,13 @@ namespace MicShop.Controllers
 
                 var cat = await _categoryService.Get(productModel.Category.ID);
                 productModel.Category = cat;
-                string base64Image = await SetImageIntoModel(productModel);
-                productModel.ImageBase64 = base64Image;
+                string Imageurl = await SetImageIntoModel(productModel);
+                productModel.ImageUrl = Imageurl;
                 productModel = await _productService.Create(productModel);
                 return RedirectToAction(nameof(Index));
             }
+            var categories = await _categoryService.GetAll();
+            ViewBag.Categories = new SelectList(categories, "ID", "Name");
             return View(productModel);
         }
 
@@ -116,12 +122,12 @@ namespace MicShop.Controllers
                 {
                     var cat = await _categoryService.Get(productModel.Category.ID);
                     productModel.Category = cat;
-                    
+
                     if (productModel.Image != null)
                     {
 
-                        string base64Image = await SetImageIntoModel(productModel);
-                        productModel.ImageBase64 = base64Image;
+                        string Imageurl = await SetImageIntoModel(productModel);
+                        productModel.ImageUrl = Imageurl;
                     }
                     productModel = await _productService.Edit(id, productModel);
                 }
@@ -164,18 +170,31 @@ namespace MicShop.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _productService.Delet(id);
-            
+
             return RedirectToAction(nameof(Index));
         }
 
-       
+
+
         private async Task<string> SetImageIntoModel(ProductModel productModel)
         {
-            MemoryStream ms = new MemoryStream();
-            await productModel.Image.CopyToAsync(ms);
-            string base64Image = Convert.ToBase64String(ms.ToArray());
-            ms.Close();
-            return base64Image;
+
+            var folderPath = $"upload/images/{DateTime.Now.ToString("yyyy")}/{DateTime.Now.ToString("MM")}/";
+            var uploads = Path.Combine(_env.WebRootPath, folderPath);
+
+            bool exists = Directory.Exists(uploads);
+
+            if (!exists)
+               Directory.CreateDirectory(uploads);
+
+            string fielName = $"{DateTime.Now.ToString("ddHHmmss")}.{productModel.Image.FileName.Split('.').Last()}";
+            var filePath = Path.Combine(uploads, fielName);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await productModel.Image.CopyToAsync(fileStream);
+            }
+
+            return $"{folderPath}/{fielName}";
 
         }
 
@@ -188,10 +207,10 @@ namespace MicShop.Controllers
         [HttpPost]
         public async Task<IActionResult> GetProductsByIdList([FromBody] IdList idList)
         {
-            List<ProductModel> productsList = await _productService.GetProductsByIdList(idList.idlist);
+            List<ProductModel> productsList = await _productService.GetProductsByIdListIncludeCategory(idList.idlist);
             return Json(productsList);
         }
 
-        
+
     }
 }

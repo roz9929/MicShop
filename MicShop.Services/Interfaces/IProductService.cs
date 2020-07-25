@@ -10,6 +10,7 @@ namespace MicShop.Services.Interfaces
     {
         Task<List<ProductModel>> GetAll(int page,int pageSize);
         Task<ProductModel> Get(int? id);
+        Task<List<ProductModel>> GetProductsByIdListIncludeCategory(List<int> IdList);
         Task<ProductModel> Create(ProductModel productModel);
         Task<ProductModel> Edit(int id, ProductModel productModel);
         Task<int> Delet(int id);

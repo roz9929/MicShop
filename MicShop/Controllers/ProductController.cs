@@ -37,6 +37,14 @@ namespace MicShop.Controllers
 
             return View("Index",model);
         }
-        
+        public class IdList
+        {
+            public List<int> idlist { get; set; }
+        }
+        public async Task<IActionResult> GetProductsById([FromBody] IdList idList)
+        {
+            List<ProductModel> productsList = await _productService.GetProductsByIdList(idList.idlist);
+            return Json(productsList);
+        }
     }
 }

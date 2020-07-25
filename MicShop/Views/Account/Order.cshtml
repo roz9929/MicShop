@@ -26,7 +26,7 @@
                     {
                         <div class="d-flex justify-content-between align-items-center product-details">
                             <div class="d-flex flex-row product-name-image">
-                                <img class="rounded" src="data:image/png;base64, @item.ImageBase64" width="80">
+                                <img class="rounded" src="@item.ImageUrl" width="80">
                                 <div class="d-flex flex-column justify-content-between ml-2">
                                     <div><span class="d-block font-weight-bold p-name">@item.Name</span><span class="fs-12">@item.Category.Name</span></div><span class="fs-12">Quantity: @Model.order.Cart.ItemList.Where(id => id.ProductId == item.ID).Select(id => id.Quantity).FirstOrDefault() pcs</span>
                                 </div>

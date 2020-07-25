@@ -4,13 +4,15 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
 
-<h4>MenuItemsModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Edit</h3>
+    </div>
+    <!-- /.card-header -->
+    <!-- form start -->
+    <form asp-action="Edit">
+        <div class="card-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
             <div class="form-group">
@@ -20,23 +22,32 @@
             </div>
             <div class="form-group">
                 <label asp-for="Text" class="control-label"></label>
-                <textarea asp-for="Text"></textarea>
+                <textarea asp-for="Text" class="textarea" placeholder="Place some text here"
+                          style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
                 <span asp-validation-for="Text" class="text-danger"></span>
             </div>
+        </div>
+        <div class="card-footer">
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
-        </form>
-    </div>
+            <div>
+                <a class="btn btn-primary" asp-action="AdminIndex">Back to List</a>
+            </div>
+        </div>
+    </form>
+
 </div>
 
-<div>
-    <a asp-action="AdminIndex">Back to List</a>
-</div>
+
+
+
+
 <script>
-    tinymce.init({
-        selector: '#Text'
+    $(document).ready(function () {
+        $('.textarea').summernote()
     });
+
 </script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

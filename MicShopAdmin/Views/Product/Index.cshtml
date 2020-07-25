@@ -4,60 +4,150 @@
     ViewData["Title"] = "Products";
 }
 
-<h1>Products</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<div class="container">
-    <div>
-
-        @foreach (var item in Model)
-        {
 
 
-            <div class="col-md-12">
-                <div class="col-sm-6 col-md-4">
-                    <div class="thumbnail">
-                        <h3 class="text-center"><span class="label label-info">Category: @Html.DisplayFor(modelItem => item.Category.Name)</span></h3>
-                        <img src="data:image/png;base64,@Html.DisplayFor(modelItem => item.ImageBase64)" class="img-responsive" alt="" style="height:200px;width:200px" />
-                        <div class="caption">
-                            <div class="row">
-                                <div class="col-md-6 col-xs-6">
-                                    <h3>@Html.DisplayFor(modelItem => item.Name)</h3>
-                                </div>
-                                <div class="col-md-6 col-xs-6 price">
-                                    <h3>
-                                        <label>@Html.DisplayFor(modelItem => item.Price)</label>
-                                    </h3>
-                                </div>
+    <p>
+        <a asp-action="Create" style="color:green;">Create New</a>
+    </p>
+
+    <div class="row" style="height: 900px;">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Products</h3>
+
+                    <div class="card-tools">
+
+                        <div class="input-group input-group-sm" style="width: 150px;">
+                            <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
                             </div>
-                            <p> Sku:@Html.DisplayFor(modelItem => item.Sku)</p>
-                            <p> Old Price:@Html.DisplayFor(modelItem => item.OldPrice)</p>
-                            <form>
-                                <button type="submit" asp-action="Edit" asp-route-id="@item.ID" class="btn btn-primary btn-xs" title="Edit">
-                                    <span class="glyphicon glyphicon-pencil"></span>
-                                </button>
-                                <button type="submit" asp-action="Details" asp-route-id="@item.ID" class="btn btn-success btn-xs" title="Details">
-                                    <span class="glyphicon glyphicon-info-sign"></span>
-                                </button>
-                                <button asp-action="Delete" asp-route-id="@item.ID" type="submit" class="btn btn-danger btn-xs" title="Delete">
-
-                                    <span class="glyphicon glyphicon-trash"> </span>
-                                </button>
-                            </form>
-
-                            <p> </p>
                         </div>
                     </div>
                 </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: 80%;">
+                    <table class="table table-head-fixed text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ID)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Image)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Name)
+                                </th>
+
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Sku)
+                                </th>
+
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Price)
+                                </th>
+
+                                <th>
+                                    @Html.DisplayNameFor(model => model.OldPrice)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Category)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                             {
+                                <tr>
+                                    <td>@item.ID</td>
+                                    <td><img src="@Html.DisplayFor(modelItem => item.ImageUrl)" class="img-responsive" alt="" style="height:50px;width:50px" /></td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Sku</td>
+                                    <td>@item.Price</td>
+                                    <td>@item.OldPrice</td>
+                                    <td>@item.Category.Name</td>
+                                    
+                                    <td>
+                                        <form>
+                                            <button type="submit" asp-controller="Product" asp-action="Edit" asp-route-id="@item.ID" class="btn btn-primary btn-xs" style="width:50px; height:25px" title="Edit">
+                                                <span class="glyphicon glyphicon-pencil"> Edit </span>
+                                            </button>
+                                        </form>
+                                    </td>
+                                        <td>
+                                            <form>
+                                                <button type="submit" asp-controller="Product" asp-action="Details" asp-route-id="@item.ID" class="btn btn-success btn-xs" style="width:50px; height:25px" title="Details">
+                                                    <span class="glyphicon glyphicon-info-sign"> Details </span>
+                                                </button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form>
+                                                <button asp-controller="Product" asp-action="Delete" asp-route-id="@item.ID" type="submit" class="btn btn-danger btn-xs" style="width:50px; height:25px" title="Delete">
+                                                    <span class="glyphicon glyphicon-trash"> Delete </span>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    
+                                </tr>
+                             }
+                        </tbody>
+
+                    </table>
+                </div>
+                <!-- /.card-body -->
             </div>
+            <!-- /.card -->
 
-
-        }
+        </div>
     </div>
-</div>
 
 
 
 
+
+
+
+@*@foreach (var item in Model)
+    {
+
+
+        <div class="col-md-12">
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <h3 class="text-center"><span class="label label-info">Category: @Html.DisplayFor(modelItem => item.Category.Name)</span></h3>
+                    <img src="data:image/png;base64,@Html.DisplayFor(modelItem => item.ImageBase64)" class="img-responsive" alt="" style="height:200px;width:200px" />
+                    <div class="caption">
+                        <div class="row">
+                            <div class="col-md-6 col-xs-6">
+                                <h3>@Html.DisplayFor(modelItem => item.Name)</h3>
+                            </div>
+                            <div class="col-md-6 col-xs-6 price">
+                                <h3>
+                                    <label>@Html.DisplayFor(modelItem => item.Price)</label>
+                                </h3>
+                            </div>
+                        </div>
+                        <p> Sku:@Html.DisplayFor(modelItem => item.Sku)</p>
+                        <p> Old Price:@Html.DisplayFor(modelItem => item.OldPrice)</p>
+                        <form>
+                            <button type="submit" asp-action="Edit" asp-route-id="@item.ID" class="btn btn-primary btn-xs" title="Edit">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </button>
+                            <button type="submit" asp-action="Details" asp-route-id="@item.ID" class="btn btn-success btn-xs" title="Details">
+                                <span class="glyphicon glyphicon-info-sign"></span>
+                            </button>
+                            <button asp-action="Delete" asp-route-id="@item.ID" type="submit" class="btn btn-danger btn-xs" title="Delete">
+
+                                <span class="glyphicon glyphicon-trash"> </span>
+                            </button>
+                        </form>
+
+                        <p> </p>
+                    </div>
+                </div>
+            </div>
+        </div>*@

@@ -4,14 +4,18 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>ContactModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Create</h3>
+        <hr />
+        <h4>Contact</h4>
+    </div>
+    <!-- /.card-header -->
+    <!-- form start -->
+    <form asp-action="Create">
+        <div class="card-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
             <div class="form-group">
                 <label asp-for="Phone" class="control-label"></label>
                 <input asp-for="Phone" class="form-control" />
@@ -52,15 +56,16 @@
                 <input asp-for="Twitter" class="form-control" />
                 <span asp-validation-for="Twitter" class="text-danger"></span>
             </div>
+        </div>
+        <div class="card-footer">
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
+            <div>
+                <a class="btn btn-primary" asp-action="Index">Back to List</a>
+            </div>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

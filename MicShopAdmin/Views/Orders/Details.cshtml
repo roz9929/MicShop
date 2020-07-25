@@ -5,50 +5,63 @@
     var order = ViewData["orderModel"] as OrderModel;
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>CategoryModel</h4>
-    <hr />
-
-    @foreach (var item in Model)
-    {
-<dl class="row">
-    <dt class="col-sm-2">
-        @Html.DisplayNameFor(modelitem => item.Name)
-    </dt>
-    <dd class="col-sm-10">
-        @Html.DisplayFor(modelitem => item.Name)
-    </dd>
-    <dt class="col-sm-2">
-        @Html.DisplayNameFor(modelitem => item.Price)
-    </dt>
-    <dd class="col-sm-10">
-        @Html.DisplayFor(modelitem => item.Price)
-    </dd>
-    <dt class="col-sm-2">
-        @Html.DisplayNameFor(modelitem => item.Sku)
-    </dt>
-    <dd class="col-sm-10">
-        @Html.DisplayFor(modelitem => item.Sku)
-    </dd>
-    <dt class="col-sm-2">
-        @Html.DisplayName("Quantity")
-    </dt>
-    <dd class="col-sm-10">
-        @(order.Cart.ItemList.Where(id=> id.ProductId==item.ID).Select(id=>id.Quantity).FirstOrDefault())
-    </dd>
-    <dt class="col-sm-2">
-        @Html.DisplayNameFor(modelitem => item.Image)
-    </dt>
-    <dd class="col-xs-2 col-md-1">
-        <img src="data:image/png;base64,@Html.DisplayFor(modelitem => item.ImageBase64)" class="img-circle img-responsive" alt="" />
-    </dd>
-</dl>
-    }
-
-
-</div>
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title">Details</h3>
+        <br />
+        <hr />
+        <h4>Category</h4>
+    </div>
+    <!-- /.card-header -->
+    <!-- form start -->
+    <form asp-action="Details">
+        <div class="card-body">
+            @foreach (var item in Model)
+            {
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(modelitem => item.Name)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(modelitem => item.Name)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(modelitem => item.Price)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(modelitem => item.Price)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(modelitem => item.Sku)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(modelitem => item.Sku)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(modelitem => item.Category)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(modelitem => item.Category.Name)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayName("Quantity")
+                </dt>
+                <dd class="col-sm-10">
+                    @(order.Cart.ItemList.Where(id => id.ProductId == item.ID).Select(id => id.Quantity).FirstOrDefault())
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(modelitem => item.Image)
+                </dt>
+                <dd class="col-xs-2 col-md-1">
+                    <img src="@Html.DisplayFor(modelitem => item.ImageUrl)" style="height:150px;width:150px" class="img-circle img-responsive" alt="" />
+                </dd>
+            </dl>
+            }
+            </div>
+        <div class="card-footer">
+            <div>
+                <a class="btn btn-primary" asp-action="Index">Back to List</a>
+            </div>
+        </div>
+    </form>
 </div>

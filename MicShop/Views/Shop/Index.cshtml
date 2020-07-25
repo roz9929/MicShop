@@ -1,4 +1,10 @@
 ﻿@using MicShop.Models
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer
+
+
+
 @model ProductViewModel
 
 @{
@@ -11,7 +17,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="section-title">
-                    <h2>Categories</h2>
+                    <h2> @Localizer["Categories"]</h2>
                 </div>
             </div>
         </div>
@@ -22,7 +28,7 @@
                 {
 
                     <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="data:image/png;base64,@item.ImageBase64">
+                        <div class="categories__item set-bg" data-setbg="@item.ImageUrl">
                             <h5><a asp-action="GetCategoryProducts" asp-route-id="@item.ID" asp-controller="Category">@item.Name</a></h5>
                         </div>
                     </div>
@@ -40,7 +46,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="section-title">
-                    <h2>Featured Product</h2>
+                    <h2>@Localizer["featured_prodcut"]</h2>
                 </div>
             </div>
         </div>
@@ -51,7 +57,7 @@
 
                 <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
                     <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="data:image/png;base64,@item.ImageBase64">
+                        <div class="featured__item__pic set-bg" data-setbg="@item.ImageUrl">
                             <ul class="featured__item__pic__hover">
                                 <li><a class="wishItem" data-id="@item.ID"><i class="fa fa-heart"></i></a></li>
                                 <li><a class="remove-item remProduct" data-id="@item.ID"><i class="fa fa-remove"></i></a></li>

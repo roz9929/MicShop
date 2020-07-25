@@ -11,7 +11,7 @@ namespace MicShop.Core.Entities
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public string ImageBase64 { get; set; }
+        public string ImageUrl { get; set; }
         public IEnumerable<ProductModel> Products { get; set; }
         
         [NotMapped]

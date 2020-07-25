@@ -22,7 +22,7 @@ namespace MicShop.Core.Entities
         public string Sku { get; set; }
         [Required]
         public CategoryModel Category { get; set; }
-        public string ImageBase64 { get; set; }
+        public string ImageUrl{ get; set; }
         [NotMapped]
         public IFormFile Image { get; set; }
         public DateTime Created { get; set; }

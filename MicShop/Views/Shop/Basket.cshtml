@@ -63,7 +63,7 @@
 
         $.ajax({
             type: "POST",
-            url: "/Product/GetProductsByIdList",
+            url: "/Product/GetProductsById",
             dataType: 'text',
             beforeSend: function (xhr) { // for ASP.NET auto deserialization
                 xhr.setRequestHeader("Content-type", "application/json");

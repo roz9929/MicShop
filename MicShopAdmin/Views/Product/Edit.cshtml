@@ -4,13 +4,16 @@
     ViewData["Title"] = "Edit Product";
 }
 
-    <h1>Edit Product</h1>
 
-<h4>Product</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" enctype="multipart/form-data">
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Edit</h3>
+    </div>
+    <!-- /.card-header -->
+    <!-- form start -->
+    <form asp-action="Edit">
+        <div class="card-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
             <div class="form-group">
@@ -48,16 +51,18 @@
                 @Html.DropDownListFor(m => m.Category.ID, ViewBag.Categories as IEnumerable<SelectListItem>, "", new { @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.Category.ID, "", new { @class = "text-danger" })
             </div>
+        </div>
+        <div class="card-footer">
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
-        </form>
-    </div>
+            <div>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </div>
+    </form>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

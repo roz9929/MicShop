@@ -50,10 +50,13 @@ let BasketListEntity = function () {
             for (var i in _self.ProductList) {
                 let curentProduct = _self.ProductList[i];
                 if (productList[j].Id === curentProduct.Id) {
+                    console.log(curentProduct.Quantity);
+                    _self.ProductList[i].Quantity = curentProduct.Quantity + productList[j].Quantity;
+                    Save();
                     return false;
                 }
             }
-            productList[j].Quantity = 1;
+            productList[j].Quantity = productList[j].Quantity;
             _self.ProductList.push(productList[j]);
         }
 
@@ -131,6 +134,25 @@ let BasketListEntity = function () {
                 }
             }
         });
+
+        $(".addToBasket").unbind().bind('click', function (e) {
+            let id = $(this).data('id');
+            var hiddenCount = $('#itemQuantity');
+            console.log(hiddenCount.val());
+            //if (typeof id !== "undefined" && id !== null) {
+            //    let prodNumElem = $("#basketProductNum" + id);
+            //    let newVal = parseInt(prodNumElem.val()) + 1;
+            //    if (newVal >= 0) {
+            //        hiddenCount.val(newVal);
+            //        prodNumElem.val(newVal);
+            //        baskets.CalculatePrice(id);
+
+            //        _self.Edit(id, newVal);
+            //    }
+            //}
+        });
+
+
         $(".remProductNum").unbind().bind('click', function (e) {
             let id = $(this).data('id');
 
@@ -307,6 +329,7 @@ var WishListEntity = function () {
                 if (newVal >= 0) {
                     prodNumElem.val(newVal);
                     wishes.CalculatePrice(id);
+                    _self.Edit(id, newVal);
                 }
             }
         });
@@ -317,8 +340,10 @@ var WishListEntity = function () {
                 let prodNumElem = $("#wishProductNum" + id);
                 let newVal = parseInt(prodNumElem.val()) - 1;
                 if (newVal >= 0) {
+                     
                     prodNumElem.val(newVal);
                     wishes.CalculatePrice(id);
+                    _self.Edit(id, newVal);
                 }
             }
         });
@@ -397,8 +422,17 @@ $(document).ready(function () {
         baskets.Add(Product);
 
     });
+    $(".basketItemProductPage").unbind().bind('click', function (e) {
+        let Product = new ProductEntity();
+        console.log("Rozis <3");
+        Product.Id = $(this).data('id');
+        let prodNumElem = $(".itemQuantity");
+        Product.Quantity = parseInt(prodNumElem.val());
+        baskets.Add(Product);
+
+    });
     $(".remProduct").unbind().bind('click', function (e) {
-        console.log("papa");
+        
         e.preventDefault();
         let id = $(this).data('id');
 

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
@@ -30,8 +33,29 @@ namespace MicShop.Controllers
             _contactService = contactService;
         }
 
+      
+
+       // [HttpPost]
+        public IActionResult SetLanguage(string culture, string returnUrl)
+        {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
+
+            return LocalRedirect(returnUrl);
+        }
+
         public async Task<IActionResult> Index(int page = 1)
         {
+
+     //       Response.Cookies.Append(
+     //    CookieRequestCultureProvider.DefaultCookieName,
+     //    CookieRequestCultureProvider.MakeCookieValue(new RequestCulture("am-AM")),
+     //    new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+     //);
+
             var categories = await _categoryService.GetAll();
             var count = await _productService.GetCount();
             var products = await _productService.GetAll(page,12);
@@ -124,6 +148,11 @@ namespace MicShop.Controllers
             ViewData["contact"] = contact;
             ViewData["lastProducts"] = lastProducts;
             return View("SearchResoultView",viewModel);
+        }
+
+        public string GetCulture()
+        {
+            return $"CurrentCulture:{CultureInfo.CurrentCulture.Name}, CurrentUICulture:{CultureInfo.CurrentUICulture.Name}";
         }
     }
 }

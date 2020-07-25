@@ -4,74 +4,120 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" style="color:green;">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Phone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OpenFrom)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OpenTo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FaceBook)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Instagram)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Twitter)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OpenFrom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OpenTo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FaceBook)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Instagram)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Twitter)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="row" style="height: 900px;">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="panel-title">
+                    Contact
+                </h3>
+
+                <div class="card-tools">
+
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                        <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0" style="height: 80%;">
+                <table class="table table-head-fixed text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Phone)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Address)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Email)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.OpenFrom)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.OpenTo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FaceBook)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Instagram)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Twitter)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Phone)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Address)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OpenFrom)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OpenTo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FaceBook)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Instagram)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Twitter)
+                            </td>
+                            <td>
+                                <form>
+                                    <button type="submit" asp-action="Edit" asp-route-id="@item.ID" class="btn btn-primary btn-xs" style="width:50px; height:25px" title="Edit">
+                                        <span class="glyphicon glyphicon-pencil"> Edit </span>
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
+                                <form>
+                                    <button type="submit" asp-action="Details" asp-route-id="@item.ID" class="btn btn-success btn-xs" style="width:50px; height:25px" title="Details">
+                                        <span class="glyphicon glyphicon-info-sign"> Details </span>
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
+                                <form>
+                                    <button asp-action="Delete" asp-route-id="@item.ID" type="submit" class="btn btn-danger btn-xs" style="width:50px; height:25px" title="Delete">
+                                        <span class="glyphicon glyphicon-trash"> Delete </span>
+                                    </button>
+                                </form>
+                            </td>
+
+                        </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+    </div>
+</div>

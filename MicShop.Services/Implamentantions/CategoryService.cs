@@ -44,9 +44,9 @@ namespace MicShop.Services.Implamentantions
             {
                 _context.Category.Attach(categoryModel);
                 _context.Entry(categoryModel).Property(x => x.Name).IsModified = true;
-                if (categoryModel.ImageBase64 != null)
+                if (categoryModel.ImageUrl != null)
                 {
-                    _context.Entry(categoryModel).Property(x => x.ImageBase64).IsModified = true;
+                    _context.Entry(categoryModel).Property(x => x.ImageUrl).IsModified = true;
                 }
 
                 await _context.SaveChangesAsync();

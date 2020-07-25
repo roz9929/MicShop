@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +17,12 @@ namespace MicShop.Controllers
     {
         //private readonly 
         private readonly ICategoryService _categoryService;
+        private readonly IHostingEnvironment _env;
 
-
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService, IHostingEnvironment env)
         {
             _categoryService = categoryService;
+            _env = env;
         }
 
         // GET: Category
@@ -57,7 +59,7 @@ namespace MicShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CategoryModel categoryModel)
+        public async Task<IActionResult> Create([Bind("Name","Image")] CategoryModel categoryModel)
         {
             if (categoryModel.Image == null)
             {
@@ -71,7 +73,7 @@ namespace MicShop.Controllers
             if (ModelState.IsValid)
             {
 
-                categoryModel.ImageBase64 = await SetImageIntoModel(categoryModel);
+                categoryModel.ImageUrl = await SetImageIntoModel(categoryModel);
                 await _categoryService.Create(categoryModel);
                 return RedirectToAction(nameof(Index));
             }
@@ -118,7 +120,7 @@ namespace MicShop.Controllers
                 {
                     if (categoryModel.Image != null)
                     {
-                        categoryModel.ImageBase64 = await SetImageIntoModel(categoryModel);
+                        categoryModel.ImageUrl = await SetImageIntoModel(categoryModel);
                     }
 
 
@@ -162,15 +164,27 @@ namespace MicShop.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
         private async Task<string> SetImageIntoModel(CategoryModel categoryModel)
         {
-            MemoryStream ms = new MemoryStream();
-            await categoryModel.Image.CopyToAsync(ms);
-            string base64Image = Convert.ToBase64String(ms.ToArray());
-            ms.Close();
-            return base64Image;
+
+            var folderPath = $"upload/images/{DateTime.Now.ToString("yyyy")}/{DateTime.Now.ToString("MM")}/";
+            var uploads = Path.Combine(_env.WebRootPath, folderPath);
+
+            bool exists = Directory.Exists(uploads);
+
+            if (!exists)
+                Directory.CreateDirectory(uploads);
+
+            string fielName = $"{DateTime.Now.ToString("ddHHmmss")}.{categoryModel.Image.FileName.Split('.').Last()}";
+            var filePath = Path.Combine(uploads, fielName);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await categoryModel.Image.CopyToAsync(fileStream);
+            }
+
+            return $"{folderPath}/{fielName}";
 
         }
+        
     }
 }

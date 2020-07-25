@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Localization.AspNetCore.TagHelpers" Version="0.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.5">
       <PrivateAssets>all</PrivateAssets>
@@ -17,6 +18,10 @@
     <ProjectReference Include="..\MicShop.Core\MicShop.Core.csproj" />
     <ProjectReference Include="..\MicShop.Services\MicShop.Services.csproj" />
     <ProjectReference Include="..\MicShopAdmin\MicShop.Admin.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Helpers\" />
   </ItemGroup>
 
 </Project>

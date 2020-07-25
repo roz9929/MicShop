@@ -1,11 +1,15 @@
 ﻿@inject MicShop.Services.Interfaces.IUserService UserService
 @inject MicShop.Services.Interfaces.IMenuItemsService MenuItemsService
-
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer
 @using System.Security.Claims
 @{
     var Contact = ViewData["contact"] as MicShop.Core.Entities.ContactModel;
     var MenuItems = await MenuItemsService.GetAll();
 }
+
+
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -54,15 +58,7 @@
             </ul>
         </div>
         <div class="humberger__menu__widget">
-            <div class="header__top__right__language">
-                <img src="~/img/language.png" alt="">
-                <div>English</div>
-                <span class="arrow_carrot-down"></span>
-                <ul>
-                    <li><a href="#">Spanis</a></li>
-                    <li><a href="#">English</a></li>
-                </ul>
-            </div>
+            @await Html.PartialAsync("_SelectLanguagePartial")
             @if (!User.Identity.IsAuthenticated)
             {
 
@@ -78,7 +74,7 @@
                     <span class="arrow_carrot-down"></span>
                     <ul>
                         <li><a asp-action="Orders" asp-controller="Account"><i class="fa fa-user"></i> @UserService.GetCurrentUser(this.Context).Name</a></li>
-                        <li><a asp-action="Logout" asp-controller="Account"><i class="fa fa-sign-out"></i> LogOut</a></li>
+                        <li><a asp-action="Logout" asp-controller="Account"><i class="fa fa-sign-out"></i> @Localizer["LogOut"]</a></li>
                     </ul>
                 </div>
 
@@ -88,8 +84,8 @@
         <nav class="humberger__menu__nav mobile-menu">
             <ul>
                 <li class="active">
-                    <a asp-area="" asp-controller="Shop" asp-action="Index">Shop</a>
-                    <a asp-area="" asp-controller="Contact" asp-action="Index">Contact</a>
+                    <a asp-area="" asp-controller="Shop" asp-action="Index">@Localizer["Shop"]</a>
+                    <a asp-area="" asp-controller="Contact" asp-action="Index">@Localizer["Contact"]</a>
                 </li>
             </ul>
         </nav>
@@ -120,19 +116,13 @@
                                 <a href="@Contact.Twitter"><i class="fa fa-twitter"></i></a>
                                 <a href="@Contact.Instagram"><i class="fa fa-instagram"></i></a>
                             </div>
-                            <div class="header__top__right__language">
-                                <img src="~/img/language.png" alt="">
-                                <div>English</div>
-                                <span class="arrow_carrot-down"></span>
-                                <ul>
-                                    <li><a href="#">Spanis</a></li>
-                                    <li><a href="#">English</a></li>
-                                </ul>
-                            </div>
+
+                            @await Html.PartialAsync("_SelectLanguagePartial")
+                           
                             @if (!User.Identity.IsAuthenticated)
                             {
                                 <div class="header__top__right__auth">
-                                    <a asp-area="" asp-action="Login" asp-controller="Account"><i class="fa fa-user"></i> Login</a>
+                                    <a asp-area="" asp-action="Login" asp-controller="Account"><i class="fa fa-user"></i> @Localizer["Login"]</a>
                                 </div>
                             }
                             else
@@ -143,7 +133,7 @@
                                     <span class="arrow_carrot-down"></span>
                                     <ul>
                                         <li><a asp-action="Orders" asp-controller="Account"><i class="fa fa-user"></i> @UserService.GetCurrentUser(this.Context).Name</a></li>
-                                        <li><a asp-action="Logout" asp-controller="Account"><i class="fa fa-sign-out"></i> LogOut</a></li>
+                                        <li><a asp-action="Logout" asp-controller="Account"><i class="fa fa-sign-out"></i>@Localizer["LogOut"]</a></li>
                                     </ul>
                                 </div>
                             }
@@ -164,11 +154,11 @@
                         <ul>
 
                             <li class="active">
-                                <a asp-area="" asp-controller="Shop" asp-action="Index">Shop</a>
+                                <a asp-area="" asp-controller="Shop" asp-action="Index">@Localizer["Shop"]</a>
                             </li>
                             @*<li><a href="./shop-grid.html">Cart</a></li>
                                 <li><a href="./blog.html">Blog</a></li>*@
-                            <li><a asp-area="" asp-controller="Contact" asp-action="Index">Contact</a></li>
+                            <li><a asp-area="" asp-controller="Contact" asp-action="Index">@Localizer["Contact"]</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -195,7 +185,7 @@
                     <div class="hero__categories">
                         <div class="hero__categories__all">
                             <i class="fa fa-bars"></i>
-                            <span>All Categories</span>
+                            <span>@Localizer["All Categories"]</span>
                         </div>
                         <ul>
 
@@ -210,11 +200,11 @@
                 </div>
                 <div class="col-lg-9">
                     <div class="hero__search">
-                       
+
                         <div class="hero__search__form">
-                            <form asp-controller="Shop" asp-action="Search"  method="GET">
+                            <form asp-controller="Shop" asp-action="Search" method="GET">
                                 <input id="searchString" name="searchString" type="text" placeholder="What do yo u need?">
-                                <button type="submit" class="site-btn">SEARCH</button>
+                                <button type="submit" class="site-btn">@Localizer["SEARCH"]</button>
                             </form>
                         </div>
 
@@ -225,7 +215,7 @@
                             </div>
                             <div class="hero__search__phone__text">
                                 <h5>@Contact.Phone</h5>
-                                <span>support 24/7 time</span>
+                                <span>@Localizer["support"]</span>
                             </div>
                         </div>
                     </div>
@@ -241,11 +231,11 @@
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="breadcrumb__text">
-                    <h2>@ViewData["Title"]</h2>
-                    <div class="breadcrumb__option">
-                        <a href="./index.html">@ViewData["Title"]</a>
-                        <span>@ViewData["Title"]</span>
-                    </div>
+                    @*<h2>@ViewData["Title"]</h2>
+                        <div class="breadcrumb__option">
+                            <a href="./index.html">@ViewData["Title"]</a>
+                            <span>@ViewData["Title"]</span>
+                        </div>*@
                 </div>
             </div>
         </div>
@@ -263,25 +253,25 @@
                             <a href="./index.html"><img src="~/img/logo.png" alt=""></a>
                         </div>
                         <ul>
-                            <li>Address: @Contact.Address</li>
-                            <li>Phone: @Contact.Phone</li>
-                            <li>Email: @Contact.Email</li>
+                            <li>@Localizer["Address"]: @Contact.Address</li>
+                            <li>@Localizer["Phone"]: @Contact.Phone</li>
+                            <li>@Localizer["Email"]: @Contact.Email</li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-6 offset-lg-1">
                     <div class="footer__widget">
-                        <h6>Useful Links</h6>
+                        <h6>@Localizer["UsefulLinks"]</h6>
                         <ul>
-                            @for (int i = 0; i <= MenuItems.Count /2; i++)
+                            @for (int i = 0; i <= MenuItems.Count / 2; i++)
                             {
-                            <li><a asp-controller="Page" asp-action="Index" asp-route-name="@MenuItems[i].Name">@MenuItems[i].Name</a></li>
+                                <li><a asp-controller="Page" asp-action="Index" asp-route-name="@MenuItems[i].Name">@MenuItems[i].Name</a></li>
                             }
-                                
-                            
+
+
                         </ul>
                         <ul>
-                            @for (int i = (MenuItems.Count / 2) +1; i < MenuItems.Count ; i++)
+                            @for (int i = (MenuItems.Count / 2) + 1; i < MenuItems.Count; i++)
                             {
                                 <li><a asp-controller="Page" asp-action="Index" asp-route-name="@MenuItems[i].Name">@MenuItems[i].Name</a></li>
                             }

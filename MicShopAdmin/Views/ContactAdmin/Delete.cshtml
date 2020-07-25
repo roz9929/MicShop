@@ -4,66 +4,79 @@
     ViewData["Title"] = "Delete";
 }
 
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>ContactModel</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Phone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Phone)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Address)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OpenFrom)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OpenFrom)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OpenTo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OpenTo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FaceBook)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FaceBook)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Instagram)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Instagram)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Twitter)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Twitter)
-        </dd>
-    </dl>
-    
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title">Delete</h3>
+        <hr />
+        <br />
+        <h3>Are you sure you want to delete this?</h3>
+        <hr />
+        <br />
+        <h4>Contact</h4>
+    </div>
+    <!-- /.card-header -->
+    <!-- form start -->
     <form asp-action="Delete">
-        <input type="hidden" asp-for="ID" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Phone)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Phone)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Address)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Address)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.OpenFrom)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.OpenFrom)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.OpenTo)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.OpenTo)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.FaceBook)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.FaceBook)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Instagram)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Instagram)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Twitter)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Twitter)
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            <div class="form-group">
+                <input type="hidden" asp-for="ID" />
+                <input type="submit" value="Delete" class="btn btn-danger" />
+            </div>
+            <div>
+                <a class="btn btn-primary" asp-action="Index">Back to List</a>
+            </div>
+        </div>
     </form>
 </div>
